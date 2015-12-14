@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+	TinyQueries config file
+	
+	Fill in fields below and save this file as config.xml
+
+-->
+<config>
+
+	<!--
+	
+		Database credentials
+		
+		REQUIRED FIELDS:
+		driver		- PDO drivername of your database (e.g. 'mysql', 'pgsql', 'odbc')
+		name		- Name of your database
+		user		- Database user
+		password	- User's password
+		
+		OPTIONAL:
+		initquery	- can be used to do initial query/queries which should be called after setting up a connection
+		
+	-->
+	<database
+		driver		= "mysql"
+		host 		= "localhost"
+		name		= ""
+		user		= ""
+		password	= ""
+	/>
+
+	<!--
+		
+		Compiler settings
+		
+		REQUIRED FIELDS:
+		output		- Path to folder where the compiled files should be put 
+					  You can use the default as is set in this file
+		
+		OPTIONAL:
+		api_key 	- Your TinyQueries API key
+		input		- Path to folder where you want to put your TinyQueries source files 
+					  You can use the default as is set in this file
+		server		- The compiler server
+		version		- Version of the compiler
+		logfile		- Path to a logfile
+		autocompile - If set to 'true' will call compiler if a compile is needed whenever you create a QueryDB object; default = false
+					  It is recommended to use autocompile only in development environments
+		
+	-->	
+	<compiler
+		api_key 	= ""
+		input		= "../queries/tiny"
+		output		= "../queries"
+	/>
+	
+	<!--
+	
+		Post processor settings
+		
+		REQUIRED FIELDS:
+		none
+		
+		OPTIONAL:
+		nest_fields	- If true, fieldnames containing one or more dots will be converted to
+					  nested fields. So "user.name" will be converted to structure like
+					  'user: { name: ".." }'
+					  (default = true) 
+		
+	-->
+	<postprocessor
+		nest_fields	= "true"
+	/>
+
+</config>
