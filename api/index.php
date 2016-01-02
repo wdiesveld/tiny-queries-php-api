@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0a
+ * @version     3.0
  * @package     TinyQueries
  *
  * License
@@ -288,10 +288,11 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0a';
+	const VERSION_LIBS			= '3.0';
 
 	public $compiler;
 	public $database;
+	public $project;
 	public $postprocessor;
 	
 	private $configFile;
@@ -339,12 +340,18 @@ class Config
 		
 		// Check required fields
 		if (!$config)						throw new \Exception("Cannot read configfile " . $this->configFile);
+		if (!$config->project)				throw new \Exception("Tag 'project' not found in " . $this->configFile);
+		if (!$config->project['label'])		throw new \Exception("Field label not found in project tag of " . $this->configFile);
 		if (!$config->database)				throw new \Exception("Tag 'database' not found in " . $this->configFile);
 		if (!$config->database['name'])		throw new \Exception("Field 'name' not found in database tag of " . $this->configFile);
 		if (!$config->database['user'])		throw new \Exception("Field 'user' not found in database tag of " . $this->configFile);
 		if (!$config->database['password'])	throw new \Exception("Field 'password' not found in database tag of " . $this->configFile);
 		if (!$config->compiler)				throw new \Exception("Tag 'compiler' not found in " . $this->configFile);
 		if (!$config->compiler['output'])	throw new \Exception("Field 'output' not found in compiler tag of " . $this->configFile);
+		
+		// Import project fields
+		$this->project = new \StdClass();
+		$this->project->label		= (string) $config->project['label'];
 		
 		// Import database fields
 		$this->database = new \StdClass();
@@ -3259,6 +3266,7 @@ class Compiler
 	private $verbose;
 	private $curlOutput;
 	private $filesWritten;
+	private $projectLabel;
 	
 	/**
 	 * Constructor
@@ -3270,6 +3278,7 @@ class Compiler
 		$config = new Config( $configFile );
 		
 		// Import settings
+		$this->projectLabel	= $config->project->label;
 		$this->apiKey		= $config->compiler->api_key;
 		$this->folderInput 	= $config->compiler->input;
 		$this->folderOutput	= $config->compiler->output;
@@ -3456,8 +3465,9 @@ class Compiler
 		
 		// Set post message 
 		$postBody = 
-			"api_key=" . urlencode( $this->apiKey ) 	. "&" .
-			"version=" . urlencode( $this->version )	. "&" ;
+			"api_key=" 	. urlencode( $this->apiKey ) 		. "&" .
+			"label="	. urlencode( $this->projectLabel ) 	. "&" .
+			"version=" 	. urlencode( $this->version )		. "&" ;
 
 		// Read project files and add them to the postBody
 		list($dummy, $sourceFiles, $sourceIDs) = $this->getFolder( self::SOURCE_FILES );
@@ -4022,6 +4032,12 @@ class DB
 		if (!$this->dbh) 
 			throw new \Exception("toSQL called before creation of dbh-object");
 			
+		if (is_array($string))
+			throw new \Exception("toSQL: Array passed while expecting a string or a number");
+			
+		if (is_object($string))
+			throw new \Exception("toSQL: Object passed while expecting a string or a number");
+			
 		if (is_null($string))
 			return "NULL";
 		
@@ -4178,6 +4194,7 @@ class Api extends HttpTools
 	protected $request;
 	protected $outputFormat;
 	protected $reservedParams;
+	protected $params = array();
 	
 	public $db;
 	public $profiler;
@@ -4393,6 +4410,59 @@ class Api extends HttpTools
 			
 		// Replace all query term special chars with underscore
 		return preg_replace('/[\+\(\)\,\s\:\|]/', '_', $queryTerm);
+	}
+	
+	/**
+	 * Checks if the given endpoint matches the endpoint as coming from the webserver.
+	 * Furthermore it sets the keys of the $params property corresponding to the variables in the path prefixed with :
+	 *
+	 * @example
+	 *    if ($this->endpoint('GET /users/:userID'))
+	 *			return $this->getUser();
+	 *
+	 * This will set $this->params['userID'] to the value in the URL if there is a match
+	 *
+	 * @param {string} $endpoint
+	 */
+	public function endpoint($endpoint)
+	{
+		// Split into two
+		list($method, $pathVars) = explode(' ', $endpoint);
+		
+		// Check if request method matches
+		if ($method != $this->request['method'])
+			return false;
+
+		// Get path which is coming from the request
+		$path = self::getRequestVar('_path');
+		
+		// Add pre- and post slashes if not present
+		if (substr($path,0,1)  != '/') $path = '/' . $path;
+		if (substr($path,-1,1) != '/') $path = $path . '/';
+		if (substr($pathVars,0,1)  != '/') $pathVars = '/' . $pathVars;
+		if (substr($pathVars,-1,1) != '/') $pathVars = $pathVars . '/';
+			
+		// Get variable names from $pathVars
+		preg_match_all( "/\:(\w+)\//", $pathVars, $vars );
+			
+		// Create a regexp based on pathVars
+		$pathRexExp = str_replace('/', '\/', $pathVars);
+		$pathRexExp = str_replace('.', '\.', $pathRexExp);
+		
+		// Replace the :vars with \w+ 
+		if ($vars)
+			foreach ($vars[1] as $var)
+				$pathRexExp = str_replace(':'.$var, "(\\w+)", $pathRexExp);
+
+		// Check if there is a match
+		if (!preg_match_all('/^' . $pathRexExp . '$/', $path, $values))
+			return false;
+			
+		// Set the parameters
+		foreach ($vars[1] as $i => $var)
+			$this->params[ $var ] = $values[$i+1][0];
+			
+		return true;
 	}
 	
 	/**
