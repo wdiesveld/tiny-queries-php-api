@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0b
+ * @version     3.0c
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0b';
+	const VERSION_LIBS			= '3.0c';
 
 	public $compiler;
 	public $database;
@@ -3257,10 +3257,10 @@ class Compiler
 	
 	public $apiKey;
 	public $querySet;
+	public $server;
 	
 	private $folderInput;
 	private $folderOutput;
-	private $server;
 	private $version;
 	private $logfile;
 	private $verbose;
@@ -3466,7 +3466,7 @@ class Compiler
 		// Set post message 
 		$postBody = 
 			"api_key=" 	. urlencode( $this->apiKey ) 		. "&" .
-			"label="	. urlencode( $this->projectLabel ) 	. "&" .
+			"project="	. urlencode( $this->projectLabel ) 	. "&" .
 			"version=" 	. urlencode( $this->version )		. "&" ;
 
 		// Read project files and add them to the postBody
@@ -4369,6 +4369,7 @@ class Api extends HttpTools
 				break;
 				
 			default:
+				throw new \Exception('No handler for contentType: ' . $this->contentType);
 				// Do nothing - for custom content-types you should override this method
 				break;
 		}
@@ -4839,6 +4840,7 @@ class AdminApi extends Api
 		$apiKey		= self::getRequestVar('_api_key', '/^\w+$/');
 		$method		= self::getRequestVar('_method', '/^[\w\.]+$/');
 		$globals	= self::getRequestVar('_globals');
+		$server 	= self::getRequestVar('_compiler'); // the compiler which is calling this api
 		
 		// Check api-key
 		if (!$apiKey)
@@ -4849,7 +4851,11 @@ class AdminApi extends Api
 			
 		if ($apiKey != $this->compiler->apiKey)
 			throw new UserFeedback("api-key does not match");
-		
+			
+		// Ensure that there is only one compiler which is speaking with this api, otherwise queries might get mixed up
+		if ($server && strpos($this->compiler->server, $server) === false)
+			throw new UserFeedback('Compiler which is calling this api does not match with compiler in config');
+			
 		// Set global query params
 		if ($globals)
 		{
@@ -4867,13 +4873,13 @@ class AdminApi extends Api
 		{
 			case 'compile': 		return $this->compile();
 			case 'deleteQuery':		return $this->deleteQuery();
+			case 'downloadQueries':	return $this->downloadQueries();
 			case 'getInterface':	return $this->getInterface();
 			case 'getProject':		return $this->getProject();
 			case 'getSource':		return $this->getSource();
 			case 'getSQL':			return $this->getSQL();
 			case 'getStatus':		return $this->getStatus();
 			case 'getTermParams': 	return $this->getTermParams();
-			case 'downloadQueries':	return $this->downloadQueries();
 			case 'renameQuery':		return $this->renameQuery();
 			case 'saveSource':		return $this->saveSource();
 			case 'testApi':			return array( "message" => "Api is working" );
