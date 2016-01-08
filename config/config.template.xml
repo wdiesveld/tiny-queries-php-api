@@ -10,6 +10,16 @@
 
 	<!--
 	
+		Project id
+		Pick a name for your project. The label should contain only regular word characters and dashes.
+	
+	-->
+	<project
+		label = "my-project"
+	/>
+
+	<!--
+	
 		Database credentials
 		
 		REQUIRED FIELDS:
@@ -36,12 +46,15 @@
 		
 		REQUIRED FIELDS:
 		output		- Path to folder where the compiled files should be put 
-					  You can use the default as is set in this file
+					  Normally the folder is called 'queries'. 
+					  It is assumed that this folder has two subfolders 'sql' and 'interface'
 		
 		OPTIONAL:
+		enable		- true/false ; specify if you want to enable compiling on this instance. Default = false
+					  It is adviced to enable compiling on development environments only
 		api_key 	- Your TinyQueries API key
 		input		- Path to folder where you want to put your TinyQueries source files 
-					  You can use the default as is set in this file
+					  Normally the folder is called 'queries/tiny'
 		server		- The compiler server
 		version		- Version of the compiler
 		logfile		- Path to a logfile
@@ -50,9 +63,10 @@
 		
 	-->	
 	<compiler
+		enable		= "true"
 		api_key 	= ""
-		input		= "../queries/tiny"
-		output		= "../queries"
+		input		= "/path/to/queries/tiny"
+		output		= "/path/to/queries"
 	/>
 	
 	<!--

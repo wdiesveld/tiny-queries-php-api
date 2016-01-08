@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.1
+ * @version     3.0.2a
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.1';
+	const VERSION_LIBS			= '3.0.2a';
 
 	public $compiler;
 	public $database;
@@ -304,11 +304,32 @@ class Config
 	 */
 	public function __construct($configFile = null)
 	{
-		$this->configFile = ($configFile)
+		$this->configFile = self::file($configFile);
+		
+		$this->load();
+	}
+	
+	/**
+	 * Checks if the given config file exists
+	 * If no file is given, checks if the default config file exists
+	 *
+	 * @param {string} $configFile
+	 */
+	public static function exists($configFile = null)
+	{
+		return file_exists( self::file($configFile) );
+	}
+	
+	/**
+	 * Returns the config file
+	 * If no file is given, return the default file
+	 *
+	 */
+	private static function file($configFile = null)
+	{
+		return ($configFile)
 			? $configFile
 			: dirname(__FILE__) . "/" . self::DEFAULT_CONFIGFILE;
-			
-		$this->load();
 	}
 	
 	/**
@@ -335,6 +356,10 @@ class Config
 	 */
 	private function load()
 	{
+		// Check if file exists
+		if (!self::exists( $this->configFile ))
+			throw new \Exception('Config file \'' . $this->configFile . '\' does not exist');
+	
 		// Load XML file
 		$config = @simplexml_load_file( $this->configFile );
 		
@@ -4502,7 +4527,7 @@ class Api extends HttpTools
 		// Replace the :vars with \w+ 
 		if ($vars)
 			foreach ($vars[1] as $var)
-				$pathRexExp = str_replace(':'.$var, "(\\w+)", $pathRexExp);
+				$pathRexExp = str_replace(':'.$var, "([\\w\\-]+)", $pathRexExp);
 
 		// Check if there is a match
 		if (!preg_match_all('/^' . $pathRexExp . '$/', $path, $values))
@@ -4872,14 +4897,6 @@ class AdminApi extends Api
 	}
 	
 	/**
-	 * Sets up the TinyQueries environment
-	 *
-	 */
-	public function setup()
-	{
-	}
-	
-	/**
 	 * Overrides parent::processRequest
 	 *
 	 */
@@ -4890,23 +4907,25 @@ class AdminApi extends Api
 		$method		= self::getRequestVar('_method', '/^[\w\.]+$/');
 		$globals	= self::getRequestVar('_globals');
 		$server 	= self::getRequestVar('_compiler'); // the compiler which is calling this api
+
+		$configExists = Config::exists( $this->configFile );
 		
 		// Check api-key
 		if (!$apiKey)
 			throw new UserFeedback("You need to provide an api-key to use this API");
 			
-		if (!$this->compiler->apiKey)
+		if ($configExists && !$this->compiler->apiKey)
 			throw new UserFeedback("You need to set the api-key in your TinyQueries config-file");
 			
-		if ($apiKey != $this->compiler->apiKey)
+		if ($configExists && $apiKey != $this->compiler->apiKey)
 			throw new UserFeedback("api-key does not match");
 			
 		// Ensure that there is only one compiler which is speaking with this api, otherwise queries might get mixed up
-		if ($server && strpos($this->compiler->server, $server) === false)
+		if ($configExists && $server && strpos($this->compiler->server, $server) === false)
 			throw new UserFeedback('Compiler which is calling this api does not match with compiler in config');
 			
 		// Set global query params
-		if ($globals)
+		if ($this->db && $globals)
 		{
 			$globals = json_decode( $globals );
 			foreach ($globals as $name => $value)
@@ -4931,6 +4950,7 @@ class AdminApi extends Api
 			case 'getTermParams': 	return $this->getTermParams();
 			case 'renameQuery':		return $this->renameQuery();
 			case 'saveSource':		return $this->saveSource();
+			case 'setup':			return $this->setup();
 			case 'testApi':			return array( "message" => "Api is working" );
 		}
 		
@@ -4975,6 +4995,35 @@ class AdminApi extends Api
 	}
 	
 	/**
+	 * Sets up the TinyQueries environment
+	 *
+	 */
+	public function setup()
+	{
+		$setupFile = dirname(__FILE__) . '/../config/setup.php';
+		
+		// Don't throw error, but just return informative message
+		if (!file_exists($setupFile))
+			return array(
+				'message' => 'Nothing to do - No setup script found'
+			);
+			
+		include( $setupFile );
+		
+		if (!function_exists('TinyQueries\\setup'))
+			throw new \Exception('There is no function \'TinyQueries\\setup\' defined in setup.php');
+		
+		$result = setup();
+		
+		if (Arrays::isAssoc($result))
+			return $result;
+			
+		return array(
+			'message' => 'TinyQueries setup complete'
+		);
+	}
+	
+	/**
 	 * Compiles the tinyqueries source code 
 	 *
 	 */
@@ -5007,9 +5056,11 @@ class AdminApi extends Api
 	 */
 	public function getStatus()
 	{
+		$timestamp = $this->compiler->getTimestampSQL();
+		
 		return array(
 			'version_libs'	=> Config::VERSION_LIBS,
-			'timestampSQL'	=> date ("Y-m-d H:i:s", $this->compiler->getTimestampSQL()),
+			'timestampSQL'	=> ($timestamp) ? date ("Y-m-d H:i:s", $timestamp) : null,
 			'dbError' 		=> $this->dbError,
 			'dbStatus'		=> ($this->db && $this->db->connected()) 
 				? 'Connected with ' . $this->db->dbname . ' at ' . $this->db->host
