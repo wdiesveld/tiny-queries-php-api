@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.2
+ * @version     3.0.3
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.2';
+	const VERSION_LIBS			= '3.0.3';
 
 	public $compiler;
 	public $database;
@@ -484,7 +484,7 @@ class Query
 		$this->output->group	= false;
 		$this->output->rows 	= "all";
 		$this->output->columns 	= "all";
-		$this->output->nested 	= true;
+		$this->output->nested 	= null;
 		$this->output->fields 	= new \StdClass();
 	}
 
@@ -637,6 +637,23 @@ class Query
 		}
 		
 		return $values;
+	}
+	
+	/**
+	 * Sets the nested flag to indicate that the output of the query should be nested.
+	 * This means that for example sql output fields named 'user.name' and 'user.email' will be converted to 
+	 * a nested structure 'user' having fields 'name' and 'email' 
+	 *
+	 * @param {boolean} $nested
+	 */
+	public function nested( $nested = true )
+	{
+		$this->output->nested = $nested;
+		
+		foreach ($this->children as $child)
+			$child->nested( $nested );
+
+		return $this;
 	}
 	
 	/**
@@ -851,8 +868,12 @@ class Query
 			{
 				$fields = array('key', 'group', 'rows', 'columns', 'nested', 'fields', 'rows2columns');
 				foreach ($fields as $field)
-					if (property_exists($query->output, $field) && $query->output->$field)
+					if (property_exists($query->output, $field) && !is_null($query->output->$field) && $query->output->$field !== '')
 						$this->output->$field = $query->output->$field;
+				
+				// Take default setting from db if nested is not specified
+				if (is_null($this->output->nested))
+					$this->output->nested = $this->db->nested;
 			}
 			else
 				// This means, the query is an insert, update or delete
@@ -1876,7 +1897,6 @@ class QuerySQL extends Query
 {
 	public $id;
 	
-	private $nested;
 	private $sql;
 	protected $_interface;
 
@@ -1891,9 +1911,6 @@ class QuerySQL extends Query
 		parent::__construct($db);
 		
 		$this->id = $id;
-		
-		// Take default setting from db
-		$this->nested = $this->db->nested;
 		
 		$this->load();
 	}
@@ -1923,20 +1940,6 @@ class QuerySQL extends Query
 	public function name()
 	{
 		return $this->id;
-	}
-	
-	/**
-	 * Sets the nested flag to indicate that the output of the query should be nested.
-	 * This means that for example sql output fields named 'user.name' and 'user.email' will be converted to 
-	 * a nested structure 'user' having fields 'name' and 'email' 
-	 *
-	 * @param {boolean} $nested
-	 */
-	public function nested( $nested = true )
-	{
-		$this->nested = $nested;
-		
-		return $this;
 	}
 	
 	/**
@@ -2175,7 +2178,7 @@ class QuerySQL extends Query
 	private function nestDottedFields(&$rows)
 	{
 		// If nesting is not set, we are ready
-		if (!$this->nested)
+		if (!$this->output->nested)
 			return;
 		
 		// If there are no rows we are ready		
@@ -4943,8 +4946,10 @@ class AdminApi extends Api
 		switch ($method)
 		{
 			case 'compile': 		return $this->compile();
+			case 'createView':		return $this->createView();
 			case 'deleteQuery':		return $this->deleteQuery();
 			case 'downloadQueries':	return $this->downloadQueries();
+			case 'getDbScheme':		return $this->getDbScheme();
 			case 'getInterface':	return $this->getInterface();
 			case 'getProject':		return $this->getProject();
 			case 'getSource':		return $this->getSource();
@@ -5097,6 +5102,29 @@ class AdminApi extends Api
 		if (!$r)
 			throw new \Exception("Could not delete $file");
 	}
+
+	/**
+	 * Creates or replaces an SQL-view which corresponds to the query
+	 *
+	 */
+	public function createView()
+	{
+		$queryID = self::getRequestVar('query', self::REG_EXP_SOURCE_ID);
+		
+		if (!$queryID)
+			throw new \Exception("No queryID");
+			
+		$sql = $this->compiler->querySet->sql($queryID);
+		
+		if (!$sql)
+			throw new \Exception("Could not read SQL file");
+			
+		$this->db->execute( 'create or replace view `' . $queryID . '` as ' . $sql );
+		
+		return array(
+			'message' => 'Created / updated view "' . $queryID . '"'
+		);
+	}
 	
 	/**
 	 * Deletes the source, sql and interface file of a query
@@ -5169,6 +5197,92 @@ class AdminApi extends Api
 		return array(
 			'message' => 'Query is renamed'
 		);
+	}
+	
+	/**
+	 * Converts a DB type to a TQ type
+	 *
+	 */
+	private function convertDbType($dbType)
+	{
+		$match = null;
+		$details = null;
+		
+		if (preg_match("/^(\w+)$/", $dbType, $match))
+			$baseType = $match[1];
+		elseif (preg_match("/^(\w+)\((.+)\)$/", $dbType, $match))
+		{
+			$baseType = $match[1];
+			$details = $match[2];
+		}
+		else
+			return 'string';
+			
+		switch ($baseType)
+		{
+			case 'enum':
+				$values = array();
+				foreach (explode(',', $details) as $element)
+					$values[] = substr($element, 1, strlen($element)-2);
+				return array(
+					'enum' => $values
+				);
+
+			case 'smallint':
+			case 'mediumint':
+			case 'tinyint':
+			case 'bigint':
+			case 'int':
+				return 'int';
+				
+			case 'date':
+				return 'date';
+				
+			case 'datetime':
+			case 'timestamp':
+				return 'datetime';
+				
+			case 'decimal':
+			case 'float':
+			case 'real':
+			case 'double':
+				return 'float';
+				
+			case 'boolean':
+				return 'boolean';
+				
+			default:
+				return 'string';
+		}
+	}
+
+	/**
+	 * Returns the database scheme
+	 *
+	 */
+	private function getDbScheme()
+	{
+		$scheme = array();
+		
+		// Currently only available for MySQL
+		if ($this->db->driver != 'mysql')
+			return $scheme;
+			
+		$tables = $this->db->selectAllFirst('show tables');
+		
+		foreach ($tables as $table)
+		{
+			$columns = $this->db->selectAllAssoc('show columns from `' . $table . '`');
+			
+			foreach ($columns as $column)
+				$scheme[$table]['fields'][ $column['Field'] ] = array(
+					'type' 	=> $this->convertDbType( $column['Type'] ),
+					'key'	=> ($column['Key']) ? $column['Key'] : null,
+					'null'	=> ($column['Null'] == 'YES') ? true : false
+				);
+		}
+		
+		return $scheme;
 	}
 	
 	/**
