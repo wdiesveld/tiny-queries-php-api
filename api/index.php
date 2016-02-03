@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.3
+ * @version     3.0.4
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.3';
+	const VERSION_LIBS			= '3.0.4';
 
 	public $compiler;
 	public $database;
@@ -5210,7 +5210,7 @@ class AdminApi extends Api
 		
 		if (preg_match("/^(\w+)$/", $dbType, $match))
 			$baseType = $match[1];
-		elseif (preg_match("/^(\w+)\((.+)\)$/", $dbType, $match))
+		elseif (preg_match("/^(\w+)\((.+)\)/", $dbType, $match))
 		{
 			$baseType = $match[1];
 			$details = $match[2];
