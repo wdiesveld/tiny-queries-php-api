@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2015 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.4
+ * @version     3.0.5
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.4';
+	const VERSION_LIBS			= '3.0.5';
 
 	public $compiler;
 	public $database;
@@ -3915,7 +3915,23 @@ class DB
 	}
 	
 	/**
-	 * Selects a record from the given table
+	 * Creates a basic select query for the given table and IDfields
+	 *
+	 * @param {string} $table
+	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
+	 */
+	private function createSelect($table, $IDfields)
+	{
+		// Convert to primary key selection
+		if (!is_array($IDfields))
+			$IDfields = array( $this->primaryKey => $IDfields );
+			
+		return "select * from `" . $this->toSQL($table) . "` where " . $this->fieldList( $IDfields, " and ", true );
+	}
+	
+	/**
+	 * Selects a single record from the given table
 	 *
 	 * @param {string} $table
 	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
@@ -3923,17 +3939,23 @@ class DB
 	 */
 	public function getRecord($table, $IDfields)
 	{
-		// Convert to primary key selection
-		if (!is_array($IDfields))
-			$IDfields = array( $this->primaryKey => $IDfields );
-			
-		$query = "select * from `" . $this->toSQL($table) . "` where " . $this->fieldList( $IDfields, " and ", true );
-		
-		return $this->selectAssoc( $query );
+		return $this->selectAssoc( $this->createSelect($table, $IDfields) );
 	}
 	
 	/**
-	 * Selects a record from the given table
+	 * Selects records from the given table
+	 *
+	 * @param {string} $table
+	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
+	 */
+	public function getRecordSet($table, $IDfields)
+	{
+		return $this->selectAllAssoc( $this->createSelect($table, $IDfields) );
+	}
+	
+	/**
+	 * Selects a single record from the given table
 	 *
 	 * @param {string} $field Fieldname which is used for selection
 	 * @param {string} $table
@@ -3944,6 +3966,18 @@ class DB
 		return $this->getRecord($table, array( $field => $value ));
 	}
 
+	/**
+	 * Selects records from the given table
+	 *
+	 * @param {string} $field Fieldname which is used for selection
+	 * @param {string} $table
+	 * @param {int|string} $value Fieldvalue
+	 */
+	public function getRecordSetBy($field, $table, $value)
+	{
+		return $this->getRecordSet($table, array( $field => $value ));
+	}
+	
 	/**
 	 * Inserts a record in the given table
 	 *
@@ -4899,7 +4933,7 @@ class AdminApi extends Api
 		}
 		
 		// Initialize compiler
-		$this->compiler = new Compiler();
+		$this->compiler = new Compiler( $this->configFile );
 	}
 	
 	/**
