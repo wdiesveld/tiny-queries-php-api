@@ -3,7 +3,7 @@
  * TinyQueries - Framework for merging and nesting relational data
  *
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
- * @copyright   2012 - 2015 Diesveld Query Technology
+ * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
  * @version     3.0.6
  * @package     TinyQueries

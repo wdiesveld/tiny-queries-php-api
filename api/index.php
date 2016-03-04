@@ -1,26 +1,13 @@
 <?php
 /**
- * TinyQueries - Framework for merging and nesting relational data
+ * This script serves as the API-handler. 
  *
- * @author      Wouter Diesveld <wouter@tinyqueries.com>
- * @copyright   2012 - 2015 Diesveld Query Technology
- * @link        http://www.tinyqueries.com
- * @version     3.0.6
- * @package     TinyQueries
+ * You can add your own code here. The recommended way to add your own code is to 
+ * extend the class TinyQueries\AdminApi or TinyQueries\Api and override the 
+ * method processRequest
  *
- * License
- *
- * This software is licensed under Apache License 2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 require_once( dirname(__FILE__) . '/../libs/TinyQueries/TinyQueries.php' );
 	
 $api = new TinyQueries\AdminApi( dirname(__FILE__) . '/../config/config.xml' );
