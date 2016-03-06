@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.6
+ * @version     3.0.7a
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.6';
+	const VERSION_LIBS			= '3.0.7a';
 
 	public $compiler;
 	public $database;
@@ -382,6 +382,7 @@ class Config
 		$this->database = new \StdClass();
 		$this->database->driver		= ($config->database['driver']) ? (string) $config->database['driver'] : 'mysql';
 		$this->database->host		= ($config->database['host']) ? (string) $config->database['host'] : 'localhost';
+		$this->database->port		= ($config->database['port']) ? (string) $config->database['port'] : null;
 		$this->database->name		= (string) $config->database['name'];
 		$this->database->user		= (string) $config->database['user'];
 		$this->database->password	= (string) $config->database['password'];
@@ -3753,6 +3754,7 @@ class DB
 	public $globals;
 	public $driver;
 	public $host;
+	public $port;
 	public $dbname;
 	public $user;
 	
@@ -3786,6 +3788,7 @@ class DB
 		// Import settings
 		$this->driver		= $config->database->driver; 
 		$this->host			= ($config->database->host) ? $config->database->host : 'localhost';
+		$this->port			= $config->database->port;
 		$this->dbname		= $config->database->name;
 		$this->user			= $config->database->user;
 		$this->pw 			= $config->database->password;
@@ -3845,6 +3848,10 @@ class DB
 		
 		// construct PDO object
 		$dsn = $this->driver . ":dbname=" . $this->dbname . ";host=" . $this->host;
+		
+		if ($this->port)
+			$dsn .= ';port=' . $this->port;
+		
 		$this->dbh = new \PDO($dsn, $this->user, $this->pw);
 		
 		// throw exception for each error
