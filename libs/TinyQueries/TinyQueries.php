@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.0.7a
+ * @version     3.0.7b
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.0.7a';
+	const VERSION_LIBS			= '3.0.7b';
 
 	public $compiler;
 	public $database;
@@ -3508,6 +3508,9 @@ class Compiler
 		$this->log('Compiler being called..');
 
 		// Init CURL
+		if (!function_exists('curl_init'))
+			throw new \Exception('Cannot compile queries - curl extension for PHP is not installed');
+
 		$this->curlOutput = null;
 		$ch = curl_init();
 
