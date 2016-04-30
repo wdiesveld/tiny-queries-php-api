@@ -1,10 +1,20 @@
-<html>
+<?php
+/**
+ * This script serves as the API-handler. 
+ *
+ * You can add your own code here. The recommended way to add your own code is to 
+ * extend the class TinyQueries\Api and override the method processRequest
+ *
+ */
 
-	<head>
-	</head>
+require_once( dirname(__FILE__) . '/libs/TinyQueries/TinyQueries.php' );
 
-	<body>
-		<h1>Welcome to TinyQueries API</h1>
-	</body>
+$configFile = dirname(__FILE__) . '/config/config.xml';
 
-</html>
+// AdminApi is needed for publishing queries; this is only needed when the api_key is sent by the online editor
+// Otherwise use the normal api class
+$api = (array_key_exists('api_key', $_GET))
+	? new TinyQueries\AdminApi( $configFile )
+	: new TinyQueries\Api( $configFile );
+
+$api->sendResponse();
