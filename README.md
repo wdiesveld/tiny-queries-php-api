@@ -15,7 +15,9 @@ Follow the instructions below to setup a TinyQueries API:
 1. Upload the files to a folder inside the document-root of your server. For example, place it in a folder such that you can access it
 through ```http://www.myserver.com/api/```
 
-1. Make a copy of the file ```config/config.template.xml``` and call it ```config/config.xml```. Fill in all required fields.
+1. Make a copy of the file ```config/config.template.xml``` and call it ```config/config.xml```. Fill in the following fields:
+   * ```<database>``` attributes 'driver', 'name', 'user' etc
+   * ```<compiler>``` attribute 'api_key' - You can find your api_key on the dashboard of your TinyQueries account.
 
 1. In the TinyQueries editor go to Config > Publish settings. In the field 'Publish to' set the URL of the api, so for example ```http://www.myserver.com/api```. 
 You can use localhost as well if your server runs on your laptop.

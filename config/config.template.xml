@@ -33,7 +33,7 @@
 		
 	-->
 	<database
-		driver		= "mysql"
+		driver		= ""
 		host 		= "localhost"
 		port		= ""
 		name		= ""
