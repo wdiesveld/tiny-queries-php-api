@@ -21,17 +21,16 @@ through ```http://www.myserver.com/api/```
 You can use localhost as well if your server runs on your laptop.
 
 1. If you use Apache, create a .htaccess file in the main folder as follows. Fill in the ```[path-to-api-folder]``` with your own folder:
+	```
+	<Limit GET POST>
+	order allow,deny
+	allow from all
+	</Limit> 
 
-```
-<Limit GET POST>
-order allow,deny
-allow from all
-</Limit> 
+	RewriteEngine On
 
-RewriteEngine On
-
-RewriteRule ^([A-Za-z0-9\-\_\(\)\+\|\,\/]*)$ /[path-to-api-folder]/index.php?_path=$1 [QSA,L]
-```
+	RewriteRule ^([A-Za-z0-9\-\_\(\)\+\|\,\/]*)$ /[path-to-api-folder]/index.php?_path=$1 [QSA,L]
+	```
 
 1. You can start creating queries. When you compile them, they are published to your webserver. The queries can be called using the api 
 by ```http://www.myserver.com/api/{myQuery}``` 
