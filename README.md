@@ -20,20 +20,13 @@ through ```http://www.myserver.com/api/```
 1. In the TinyQueries editor go to Config > Publish settings. In the field 'Publish to' set the URL of the api, so for example ```http://www.myserver.com/api```. 
 You can use localhost as well if your server runs on your laptop.
 
-1. If you use Apache, create a .htaccess file in the main folder as follows. Fill in the ```[path-to-api-folder]``` with your own folder:
+1. If you use Apache and if you have put the files in another folder than ```/api```, then update the path in the ```.htaccess``` file in the main folder: 
 	```
-	<Limit GET POST>
-	order allow,deny
-	allow from all
-	</Limit> 
-
-	RewriteEngine On
-
-	RewriteRule ^([A-Za-z0-9\-\_\(\)\+\|\,\/]*)$ /[path-to-api-folder]/index.php?_path=$1 [QSA,L]
+	RewriteRule ^([A-Za-z0-9\-\_\(\)\+\|\,\/]*)$ /api/index.php?_path=$1 [QSA,L]
 	```
 
 1. You can start creating queries. When you compile them, they are published to your webserver. The queries can be called using the api 
-by ```http://www.myserver.com/api/{myQuery}``` 
+by ```http://www.myserver.com/api/{myQuery}```. So for example  ```http://www.myserver.com/api/helloWorld``` should work after you compile for the first time.
 
 
 [TinyQueries PHP-libs]:https://github.com/wdiesveld/TinyQueries

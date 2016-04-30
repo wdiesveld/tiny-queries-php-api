@@ -11,10 +11,10 @@ require_once( dirname(__FILE__) . '/libs/TinyQueries/TinyQueries.php' );
 
 $configFile = dirname(__FILE__) . '/config/config.xml';
 
-// AdminApi is needed for publishing queries; this is only needed when the api_key is sent by the online editor
+// AdminApi is needed for publishing queries; this is only needed when the api-key is sent by the online editor
 // Otherwise use the normal api class
-$api = (array_key_exists('api_key', $_GET))
+$api = (array_key_exists('_api_key', $_REQUEST))
 	? new TinyQueries\AdminApi( $configFile )
-	: new TinyQueries\Api( $configFile );
+	: new TinyQueries\Api( $configFile, true );
 
 $api->sendResponse();
