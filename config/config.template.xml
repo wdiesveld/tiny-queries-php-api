@@ -17,7 +17,7 @@
 	<project
 		label = "my-project"
 	/>
-
+	
 	<!--
 	
 		Database credentials
@@ -66,8 +66,8 @@
 	<compiler
 		enable		= "true"
 		api_key 	= ""
-		input		= "/path/to/queries/tiny"
-		output		= "/path/to/queries"
+		input		= "../../queries/tiny"
+		output		= "../../queries"
 	/>
 	
 	<!--
