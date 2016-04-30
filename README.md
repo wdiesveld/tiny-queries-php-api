@@ -20,7 +20,8 @@ through ```http://www.myserver.com/api/```
 1. In the TinyQueries editor go to Config > Publish settings. In the field 'Publish to' set the URL of the api, so for example ```http://www.myserver.com/api```. 
 You can use localhost as well if your server runs on your laptop.
 
-1. If you don't use Apache, ensure you do the same URL-rewriting as is done in ```.htaccess```.
+1. If you don't use Apache, ensure you do the same URL-rewriting as is done in ```.htaccess```. 
+   Furthermore ensure that the folders ```config```, ```libs``` and ```queries``` are not accessible.
 
 1. You can start creating queries. When you compile them, they are published to your webserver. The queries can be called using the api 
 by ```http://www.myserver.com/api/{myQuery}```. So for example  ```http://www.myserver.com/api/helloWorld``` should work after you compile for the first time.
