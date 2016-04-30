@@ -17,7 +17,7 @@ through ```http://www.myserver.com/api/```
 
 1. Make a copy of the file ```config/config.template.xml``` and call it ```config/config.xml```. Fill in all required fields.
 
-1. In the TinyQueries editor go to Config > Publish settings. In the field 'Publish to' set  the URL of the api + ```/admin```, so for example ```http://www.myserver.com/api/admin```. 
+1. In the TinyQueries editor go to Config > Publish settings. In the field 'Publish to' set the URL of the api, so for example ```http://www.myserver.com/api```. 
 You can use localhost as well if your server runs on your laptop.
 
 1. If you use Apache, create a .htaccess file in the main folder as follows. Fill in the ```[path-to-api-folder]``` with your own folder:
