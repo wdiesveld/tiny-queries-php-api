@@ -4,10 +4,11 @@ This is a derived version of [TinyQueries PHP-libs]. It can be used to set up a 
 
 ## Installation instructions
 
-Note 1: It is assumed you already have an account for TinyQueries. If you don't have one, please [sign up] first.
+* _Note 1_: It is assumed you already have an account for TinyQueries. If you don't have one, please [sign up] first.
 
-Note 2: The installation will be done by just downloading the ZIP and copy the files to your webserver. 
-If you prefer to install TinyQueries using Composer we suggest to use [TinyQueries PHP-libs].
+* _Note 2_: The installation will be done by just downloading the ZIP and copy the files to your webserver. If you prefer to install TinyQueries using Composer we suggest to use [TinyQueries PHP-libs].
+
+Follow the instructions below to setup a TinyQueries API:
 
 1. Download the latest release of this repo as ZIP
 
