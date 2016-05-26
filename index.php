@@ -7,6 +7,11 @@
  *
  */
 
+// This will be used to catch PHP fatal errors
+register_shutdown_function( '_shutdown' );
+
+error_reporting(0);
+
 require_once( dirname(__FILE__) . '/libs/TinyQueries/TinyQueries.php' );
 
 $configFile = dirname(__FILE__) . '/config/config.xml';
@@ -18,3 +23,16 @@ $api = (array_key_exists('_api_key', $_REQUEST))
 	: new TinyQueries\Api( $configFile, true );
 
 $api->sendResponse();
+
+/**
+ * This is needed to catch fatal errors
+ *
+ */
+function _shutdown()
+{
+	$error = error_get_last();
+
+	if ($error !== NULL)
+		echo json_encode( array( 'error' => 'PHP error: ' . $error['message'] . ' in ' . $error['file'] . ' line ' . $error['line'] ) );
+}
+ 
