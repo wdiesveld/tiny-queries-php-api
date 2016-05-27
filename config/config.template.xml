@@ -20,6 +20,15 @@
 	
 	<!--
 	
+		Swagger definition file (optional)
+	
+	-->
+	<api
+		swagger	= "/path/to/swagger.json"
+	/>
+
+	<!--
+	
 		Database credentials
 		
 		REQUIRED FIELDS:
