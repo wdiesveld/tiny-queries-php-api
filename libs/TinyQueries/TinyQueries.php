@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.1.2
+ * @version     3.1.3
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.1.2';
+	const VERSION_LIBS			= '3.1.3';
 
 	public $compiler;
 	public $database;
