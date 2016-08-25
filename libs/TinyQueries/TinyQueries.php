@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.1.3
+ * @version     3.1.4
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.1.3';
+	const VERSION_LIBS			= '3.1.4';
 
 	public $compiler;
 	public $database;
@@ -477,7 +477,7 @@ class Query
 	 *
 	 * @param {DB} $db Handle to database
 	 */
-	public function __construct($db)
+	public function __construct(&$db)
 	{
 		$this->db 				= $db;
 		$this->orderBy			= array();
@@ -1094,7 +1094,7 @@ class QueryAttach extends Query
 	 * @param {DB} $db Handle to database
 	 * @param {string} $terms (optional) 
 	 */
-	public function __construct($db, $terms = array())
+	public function __construct(&$db, $terms = array())
 	{
 		parent::__construct($db);
 		
@@ -1232,7 +1232,7 @@ class QueryFilter extends Query
 	 * @param {DB} $db Handle to database
 	 * @param {string} $terms (optional) 
 	 */
-	public function __construct($db, $terms = array())
+	public function __construct(&$db, $terms = array())
 	{
 		parent::__construct($db);
 
@@ -1416,7 +1416,7 @@ class QueryMerge extends Query
 	 * @param {DB} $db Handle to database
 	 * @param {string} $terms (optional) 
 	 */
-	public function __construct($db, $terms = array())
+	public function __construct(&$db, $terms = array())
 	{
 		parent::__construct($db);
 		
@@ -1912,7 +1912,7 @@ class QuerySQL extends Query
 	 * @param {DB} $db Handle to database
 	 * @param {string} $id (optional) ID of the query
 	 */
-	public function __construct($db, $id = null)
+	public function __construct(&$db, $id = null)
 	{
 		parent::__construct($db);
 		
@@ -2490,7 +2490,7 @@ class QueryTree extends Query
 	 * @param {string} $id ID of parent query - $id should refer to an atomic query
 	 * @param {string} $terms Query terms corresponding to the child queries of the tree
 	 */
-	public function __construct($db, $id, $terms = array())
+	public function __construct(&$db, $id, $terms = array())
 	{
 		parent::__construct($db);
 		
@@ -2766,7 +2766,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $term
 	 */
-	public static function parse($db, $term)
+	public static function parse(&$db, $term)
 	{
 		if (!$term)
 			return;
@@ -2823,7 +2823,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $term 
 	 */
-	private static function parseMerge($db, $term = null, $prefix = null)
+	private static function parseMerge(&$db, $term = null, $prefix = null)
 	{
 		$list = self::split($term, '|');
 
@@ -2844,7 +2844,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $term
 	 */
-	private static function parseAttach($db, $term)
+	private static function parseAttach(&$db, $term)
 	{
 		$list = self::split($term, '+', ';');
 		
@@ -2861,7 +2861,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $term
 	 */
-	private static function parseChain($db, $term)
+	private static function parseChain(&$db, $term)
 	{
 		$list = self::split($term, ':', '#');
 		
@@ -2878,7 +2878,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $term
 	 */
-	private static function parseTree($db, $term)
+	private static function parseTree(&$db, $term)
 	{
 		list( $id, $children ) = self::parseID( $term );
 
@@ -2928,7 +2928,7 @@ class Term
 	 * @param {DB} $db
 	 * @param {string} $id
 	 */
-	private static function atomic($db, $id)
+	private static function atomic(&$db, $id)
 	{
 		$interface = $db->queries->getInterface( $id );
 
