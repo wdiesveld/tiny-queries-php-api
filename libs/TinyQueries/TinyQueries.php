@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.1.5
+ * @version     3.2.0
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.1.5';
+	const VERSION_LIBS			= '3.2.0';
 
 	public $compiler;
 	public $database;
@@ -4409,8 +4409,7 @@ class Api extends HttpTools
 
 			// Ensure the output is an associative array, so that meta data like exectime can be added
 			if ($this->addProfilingInfo && (!Arrays::isAssoc($response) || (Arrays::isAssoc($response) && count($response) == 0)))
-				$response = array
-				(
+				$response = array(
 					'result' => $response
 				);
 
@@ -4442,12 +4441,12 @@ class Api extends HttpTools
 			$errorMessage = $e->getMessage();
 		
 			$showToUser = (get_class( $e ) == "TinyQueries\\UserFeedback" || $this->debugMode == true) 
-								? true 
-								: false;
+				? true 
+				: false;
 								
 			$httpCode	= (get_class( $e ) == "TinyQueries\\UserFeedback")
-								? $e->getCode()
-								: 400;
+				? $e->getCode()
+				: 400;
 
 			$response = $this->createErrorResponse( $errorMessage, $showToUser, $httpCode );
 		}
@@ -4540,6 +4539,24 @@ class Api extends HttpTools
 			
 		// Replace all query term special chars with underscore
 		return preg_replace('/[\+\(\)\,\s\:\|]/', '_', $queryTerm);
+	}
+	
+	/**
+	 * Gets / sets the endpoints
+	 *
+	 * @param {array} $endpoints If null, returns the endpoints, otherwise sets the entpoints. 
+	 *                           Array should be assoc array like 'GET /my/path/{id}' => 'myQuery'
+	 *                           Parameters which are in the path or in the body will be passed to the query
+	 */
+	public function endpoints( $endpoints = null )
+	{
+		if (is_null($endpoints))
+			return $this->endpoints;
+		
+		foreach ($endpoints as $path => $query)
+			$this->endpoints[ $path ] = array(
+				'query' => $query
+			);
 	}
 	
 	/**
@@ -4766,6 +4783,17 @@ class Api extends HttpTools
 		foreach ($this->endpoints as $path => $def)
 			if ($this->endpoint( $path ) && array_key_exists('query', $def))
 				return $this->db->query( $def['query'] )->run( $this->params );
+		
+		// Catch the root if none was defined and return basic api info
+		if ($this->endpoint('GET /'))
+		{
+			$endpointList = array_keys( $this->endpoints );
+			sort( $endpointList );
+			return array(
+				'message' => 'Welcome to the API',
+				'endpoints' => $endpointList
+			);
+		}
 			
 		throw new UserFeedback('No valid API-call');	
 	}
