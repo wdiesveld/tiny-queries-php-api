@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.2.0
+ * @version     3.2.2
  * @package     TinyQueries
  *
  * License
@@ -65,9 +65,9 @@ namespace TinyQueries;
 	/**
 	 * Converts encoding to latin, trims the value, and checks it against the regular expression
 	 *
-	 * @param {mixed} $value Can be an array or a string - if it is an array, sanitize is called recursively for each array element
-	 * @param {string} $regexp
-	 * @param {string} $defaultvalue
+	 * @param mixed $value Can be an array or a string - if it is an array, sanitize is called recursively for each array element
+	 * @param string $regexp
+	 * @param string $defaultvalue
 	 */
 	private static function sanitize(&$value, $regexp, $defaultvalue)
 	{
@@ -187,7 +187,7 @@ namespace TinyQueries;
 	/**
 	 * Sets the HTTP status code
 	 *
-	 * @param {int} $code
+	 * @param int $code
 	 */
 	public static function setHttpResponseCode($code = NULL) 
 	{
@@ -266,8 +266,8 @@ class UserFeedback extends \Exception
 	/**
 	 * Constructor
 	 *
-	 * @param {string} $message
-	 * @param {int} $httpCode
+	 * @param string $message
+	 * @param int $httpCode
 	 */
 	public function __construct($message = null, $httpCode = 400)
 	{
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.2.0';
+	const VERSION_LIBS			= '3.2.2';
 
 	public $compiler;
 	public $database;
@@ -301,7 +301,7 @@ class Config
 	/**
 	 * Constructor
 	 *
-	 * @param {string} $configFile Optionally you can provide a config file
+	 * @param string $configFile Optionally you can provide a config file
 	 */
 	public function __construct($configFile = null)
 	{
@@ -314,7 +314,7 @@ class Config
 	 * Checks if the given config file exists
 	 * If no file is given, checks if the default config file exists
 	 *
-	 * @param {string} $configFile
+	 * @param string $configFile
 	 */
 	public static function exists($configFile = null)
 	{
@@ -336,7 +336,7 @@ class Config
 	/**
 	 * Returns the absolute path 
 	 *
-	 * @param {string} $path
+	 * @param string $path
 	 */
 	public static function pathAbs($path)
 	{
@@ -475,7 +475,7 @@ class Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
+	 * @param DB $db Handle to database
 	 */
 	public function __construct(&$db)
 	{
@@ -497,9 +497,9 @@ class Query
 	/**
 	 * Sets the query parameter values
 	 *
-	 * @param {mixed} $paramValues
+	 * @param mixed $paramValues
 	 *
-	 * @return {Query}
+	 * @return Query
 	 */
 	public function params( $paramValues )
 	{
@@ -555,8 +555,8 @@ class Query
 	/**
 	 * Set the order 
 	 *
-	 * @param {string} $orderBy
-	 * @param {string} $orderType
+	 * @param string $orderBy
+	 * @param string $orderType
 	 */
 	public function order( $orderBy, $orderType = 'asc')
 	{
@@ -569,9 +569,9 @@ class Query
 	/**
 	 * Sets the fieldname which can be used as a key (for example for merging)
 	 *
-	 * @param {string} $keyField
+	 * @param string $keyField
 	 *
-	 * @return {Query}
+	 * @return Query
 	 */
 	public function key( $keyField )
 	{
@@ -583,7 +583,7 @@ class Query
 	/**
 	 * Returns the field name in the select-part which corresponds to $key;
 	 *
-	 * @param {string} $key
+	 * @param string $key
 	 */
 	protected function keyField($key)
 	{
@@ -598,8 +598,8 @@ class Query
 	/**
 	 * Collects the values from $rows corresponding to the $key
 	 *
-	 * @param {string} $key
-	 * @param {array} $rows
+	 * @param string $key
+	 * @param array $rows
 	 */
 	protected function keyValues($key, &$rows)
 	{
@@ -650,7 +650,7 @@ class Query
 	 * This means that for example sql output fields named 'user.name' and 'user.email' will be converted to 
 	 * a nested structure 'user' having fields 'name' and 'email' 
 	 *
-	 * @param {boolean} $nested
+	 * @param boolean $nested
 	 */
 	public function nested( $nested = true )
 	{
@@ -666,7 +666,7 @@ class Query
 	 * Sets whether the output should be grouped by the key
 	 * so you get a structure like: { a: [..], b: [..] }
 	 *
-	 * @param {boolean} $value
+	 * @param boolean $value
 	 */
 	public function group($value = true)
 	{
@@ -678,7 +678,7 @@ class Query
 	/**
 	 * Set the maximum number of results which should be returned (only applies to merge queries)
 	 *
-	 * @param {int} $maxResults
+	 * @param int $maxResults
 	 */
 	public function max( $maxResults )
 	{
@@ -721,8 +721,8 @@ class Query
 	/**
 	 * Adds a parameter binding to the query
 	 *
-	 * @param {string} $paramName
-	 * @param {string} $fieldName 
+	 * @param string $paramName
+	 * @param string $fieldName 
 	 */
 	public function bind($paramName, $fieldName = null)
 	{
@@ -732,7 +732,7 @@ class Query
 	/**
 	 * Generic run function 
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function run($paramValues = null)
 	{
@@ -752,7 +752,7 @@ class Query
 	/**
 	 * Executes the query and returns the result
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function execute($paramValues = null)
 	{
@@ -765,9 +765,9 @@ class Query
 	/**
 	 * Generic select function
 	 *
-	 * @param {mixed} $paramValues
-	 * @param {string} $key (optional) Key field which can be used to group the output
-	 * @param {boolean} $cleanUp Do clean up of columns in query output
+	 * @param mixed $paramValues
+	 * @param string $key (optional) Key field which can be used to group the output
+	 * @param boolean $cleanUp Do clean up of columns in query output
 	 */
 	public function select($paramValues = null, $key = null, $cleanUp = true)
 	{
@@ -810,9 +810,9 @@ class Query
 	/**
 	 * Generic select function; selects the first row
 	 *
-	 * @param {mixed} $paramValues
-	 * @param {string} $key (optional) Key field which can be used to group the output
-	 * @param {boolean} $cleanUp Do clean up of columns in query output
+	 * @param mixed $paramValues
+	 * @param string $key (optional) Key field which can be used to group the output
+	 * @param boolean $cleanUp Do clean up of columns in query output
 	 */
 	public function select1($paramValues = null, $key = null, $cleanUp = true)
 	{
@@ -829,8 +829,8 @@ class Query
 	/**
 	 * Executes the query and attaches the fields to the given object
 	 *
-	 * @param {object} $object
-	 * @param {assoc} $queryParams
+	 * @param object $object
+	 * @param assoc $queryParams
 	 */
 	public function selectToObject(&$object, $queryParams = null)
 	{
@@ -857,7 +857,7 @@ class Query
 	/**
 	 * Imports (a part of) a query definition
 	 *
-	 * @param {object} $query
+	 * @param object $query
 	 */
 	public function import($query)
 	{
@@ -918,9 +918,9 @@ class Query
 	/**
 	 * Cleans up columns which should not be in the query output
 	 *
-	 * @param {mixed} $data Query output
-	 * @param {string} $type Type of cleaning 'keys' or 'childDefs'
-	 * @param {string} $key Key field which should be excluded from clean up
+	 * @param mixed $data Query output
+	 * @param string $type Type of cleaning 'keys' or 'childDefs'
+	 * @param string $key Key field which should be excluded from clean up
 	 */
 	protected function cleanUp(&$rows, $type, $key = null)
 	{
@@ -992,8 +992,8 @@ class Query
 	/**
 	 * Links a list of terms to this query
 	 *
-	 * @param {array} $terms
-	 * @param {boolean} $firstAsRoot
+	 * @param array $terms
+	 * @param boolean $firstAsRoot
 	 */
 	protected function linkList($terms, $firstAsRoot)
 	{
@@ -1028,9 +1028,9 @@ class Query
 	/**
 	 * Connects a query to this query
 	 *
-	 * @param {string} $term
+	 * @param string $term
 	 *
-	 * @return {Query}
+	 * @return Query
 	 */
 	protected function link($term)
 	{
@@ -1045,7 +1045,7 @@ class Query
 	 * Checks if the given queries match based on common keys.
 	 * If one query is passed, then it is compared with this query
 	 *
-	 * @param {array|Query} $queries
+	 * @param array|Query $queries
 	 */
 	protected function match(&$queries)
 	{
@@ -1091,8 +1091,8 @@ class QueryAttach extends Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
-	 * @param {string} $terms (optional) 
+	 * @param DB $db Handle to database
+	 * @param string $terms (optional) 
 	 */
 	public function __construct(&$db, $terms = array())
 	{
@@ -1111,7 +1111,7 @@ class QueryAttach extends Query
 	/**
 	 * 'Left joins' the child queries
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function execute($paramValues = null)
 	{
@@ -1176,8 +1176,8 @@ class QueryAttach extends Query
 	/**
 	 * Adds a parameter binding to the query
 	 *
-	 * @param {string} $paramName
-	 * @param {string} $fieldName 
+	 * @param string $paramName
+	 * @param string $fieldName 
 	 */
 	public function bind($paramName, $fieldName = null)
 	{
@@ -1229,8 +1229,8 @@ class QueryFilter extends Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
-	 * @param {string} $terms (optional) 
+	 * @param DB $db Handle to database
+	 * @param string $terms (optional) 
 	 */
 	public function __construct(&$db, $terms = array())
 	{
@@ -1249,9 +1249,9 @@ class QueryFilter extends Query
 	/**
 	 * Sets the query parameter values
 	 *
-	 * @param {mixed} $paramValues
+	 * @param mixed $paramValues
 	 *
-	 * @return {Query}
+	 * @return Query
 	 */
 	public function params( $paramValues )
 	{
@@ -1280,7 +1280,7 @@ class QueryFilter extends Query
 	/**
 	 * Filters the output of the child queries
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function execute($paramValues = null)
 	{
@@ -1361,8 +1361,8 @@ class QueryFilter extends Query
 	/**
 	 * Adds a parameter binding to the query
 	 *
-	 * @param {string} $paramName
-	 * @param {string} $fieldName 
+	 * @param string $paramName
+	 * @param string $fieldName 
 	 */
 	public function bind($paramName, $fieldName = null)
 	{
@@ -1413,8 +1413,8 @@ class QueryMerge extends Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
-	 * @param {string} $terms (optional) 
+	 * @param DB $db Handle to database
+	 * @param string $terms (optional) 
 	 */
 	public function __construct(&$db, $terms = array())
 	{
@@ -1426,7 +1426,7 @@ class QueryMerge extends Query
 	/**
 	 * Merges the output of the child queries
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function execute($paramValues = null)
 	{
@@ -1465,8 +1465,8 @@ class QueryMerge extends Query
 	/**
 	 * Adds a parameter binding to the query
 	 *
-	 * @param {string} $paramName
-	 * @param {string} $fieldName 
+	 * @param string $paramName
+	 * @param string $fieldName 
 	 */
 	public function bind($paramName, $fieldName = null)
 	{
@@ -1497,7 +1497,7 @@ class QueryMerge extends Query
 	/**
 	 * Merges the output of the child queries by using a common key
 	 *
-	 * @param {string} $key
+	 * @param string $key
 	 */
 	private function mergeByKey($key, $orderBy)
 	{
@@ -1557,7 +1557,7 @@ class Arrays
 	/**
 	 * Checks if an array is an assocative array
 	 *
-	 * @param {mixed} $array
+	 * @param mixed $array
 	 */
 	public static function isAssoc(&$array)
 	{
@@ -1569,8 +1569,8 @@ class Arrays
 	/**
 	 * Converts a nummerical array to an associative array, based on the given key
 	 *
-	 * @param {array} $rows
-	 * @param {string} $key;
+	 * @param array $rows
+	 * @param string $key;
 	 */
 	public static function toAssoc($rows, $key)
 	{
@@ -1590,9 +1590,9 @@ class Arrays
 	/**
 	 * Groups the rows on the given key
 	 *
-	 * @param {array} $rows
-	 * @param {string} $key
-	 * @param {boolean} $deleteKey If true, removes the key-column from the result
+	 * @param array $rows
+	 * @param string $key
+	 * @param boolean $deleteKey If true, removes the key-column from the result
 	 */
 	public static function groupBy($rows, $key, $deleteKey = false)
 	{
@@ -1624,7 +1624,7 @@ class Arrays
 	/**
 	 * Converts a associative array to an numerical array
 	 *
-	 * @param {array} $rows
+	 * @param array $rows
 	 */
 	public static function toIndexed($assoc)
 	{
@@ -1640,8 +1640,8 @@ class Arrays
 	 *
 	 * @param &$array {array} Array which will be modified by adding element of the next array:
 	 * @param $arrayToAdd {array}
-	 * @param {string} $orderBy (optional) Name of the field which should be used for ordering the merged result
-	 * @param {string} $orderType (optional) 'asc' or 'desc'; default is 'asc'
+	 * @param string $orderBy (optional) Name of the field which should be used for ordering the merged result
+	 * @param string $orderType (optional) 'asc' or 'desc'; default is 'asc'
 	 */
 	public static function mergeArrays(&$array, $arrayToAdd, $orderBy = null, $orderType = 'asc')
 	{ 
@@ -1703,9 +1703,9 @@ class Arrays
 	 * Simple case is that $value is just a string or int
 	 * But it can also be the case that $value is an assoc and that $assoc[$key] is also an assoc
 	 *
-	 * @param {assoc} $assoc
-	 * @param {string} $key
-	 * @param {string|int|assoc} $value
+	 * @param assoc $assoc
+	 * @param string $key
+	 * @param string|int|assoc $value
 	 */
 	public static function mergeField( &$assoc, $key, $value )
 	{
@@ -1819,7 +1819,7 @@ class Arrays
 	/**
 	 * Recursive function to remove structures like { a: null, b: null, c: { d: null, e: null } }
 	 *
-	 * @param {assoc} $fields
+	 * @param assoc $fields
 	 */
 	public static function reduceNulls(&$fields)
 	{
@@ -1844,10 +1844,10 @@ class Arrays
 	/**
 	 * Transforms rows to columns
 	 *
-	 * @param {array} $array Array of associative arrays
-	 * @param {string} $key 
-	 * @param {string} $name
-	 * @param {string} $value
+	 * @param array $array Array of associative arrays
+	 * @param string $key 
+	 * @param string $name
+	 * @param string $value
 	 */
 	public static function rows2columns(&$array, $key, $name, $value)
 	{
@@ -1872,7 +1872,7 @@ class Arrays
 	/**
 	 * Makes an array of $any if it is not yet an array
 	 *
-	 * @param {mixed} $any
+	 * @param mixed $any
 	 */
 	public static function toArray( $any )
 	{
@@ -1909,8 +1909,8 @@ class QuerySQL extends Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
-	 * @param {string} $id (optional) ID of the query
+	 * @param DB $db Handle to database
+	 * @param string $id (optional) ID of the query
 	 */
 	public function __construct(&$db, $id = null)
 	{
@@ -1951,7 +1951,7 @@ class QuerySQL extends Query
 	/**
 	 * Executes the query
 	 *
-	 * @param {assoc} $queryParams
+	 * @param assoc $queryParams
 	 */
 	public function execute($paramValues = null)
 	{
@@ -2002,7 +2002,7 @@ class QuerySQL extends Query
 			if (!$this->output)
 			{
 				list($sql, $pdoParams) = $this->getSql( $paramValues );
-				return $this->db->execute( $sql, $pdoParams );
+				return $this->db->execute( $sql, $pdoParams, true );
 			}
 			
 			$rows = (string) $this->_interface->output->rows;
@@ -2026,7 +2026,7 @@ class QuerySQL extends Query
 	/**
 	 *
 	 *
-	 * @param {assoc} $queryParams
+	 * @param assoc $queryParams
 	 */
 	public function selectAllAssoc($queryParams = null)
 	{
@@ -2042,7 +2042,7 @@ class QuerySQL extends Query
 	/**
 	 *
 	 *
-	 * @param {assoc} $queryParams
+	 * @param assoc $queryParams
 	 */
 	public function selectAssoc($queryParams = null)
 	{
@@ -2058,7 +2058,7 @@ class QuerySQL extends Query
 	/**
 	 *
 	 *
-	 * @param {assoc} $queryParams
+	 * @param assoc $queryParams
 	 */
 	public function selectAllFirst($queryParams = null)
 	{
@@ -2074,7 +2074,7 @@ class QuerySQL extends Query
 	/**
 	 *
 	 *
-	 * @param {assoc} $queryParams
+	 * @param assoc $queryParams
 	 */
 	public function selectFirst($queryParams = null)
 	{
@@ -2090,7 +2090,7 @@ class QuerySQL extends Query
 	/**
 	 * Does all post processing for the output of a query
 	 *
-	 * @param {array} $rows The rows as returned by the database
+	 * @param array $rows The rows as returned by the database
 	 */
 	private function postProcess(&$rows)
 	{
@@ -2120,7 +2120,7 @@ class QuerySQL extends Query
 	/**
 	 * Sets the type of the output fields, according to the type specification in the json file
 	 *
-	 * @param {array} $rows
+	 * @param array $rows
 	 */
 	private function applyTyping(&$rows)
 	{
@@ -2133,8 +2133,8 @@ class QuerySQL extends Query
 	/**
 	 * Do type casting for the given field
 	 *
-	 * @param {string} $field
-	 * @param {string} $type
+	 * @param string $field
+	 * @param string $type
 	 */
 	private function setType(&$field, $type)
 	{
@@ -2179,7 +2179,7 @@ class QuerySQL extends Query
 	/**
 	 * Converts dot-notation fields to a nested structure.
 	 * 
-	 * @param {array} $rows
+	 * @param array $rows
 	 */
 	private function nestDottedFields(&$rows)
 	{
@@ -2232,9 +2232,9 @@ class QuerySQL extends Query
 	/**
 	 * Helper function for nestDottedFields
 	 *
-	 * @param {assoc} $row
-	 * @param {array} $fieldComponents
-	 * @param {string} $value
+	 * @param assoc $row
+	 * @param array $fieldComponents
+	 * @param string $value
 	 */
 	private function nestField(&$row, $fieldComponents, $value)
 	{
@@ -2293,7 +2293,7 @@ class QuerySQL extends Query
 	 * Reads query-file and fills in the IN-parameters - 
 	 * other params will be converted to PDO params which can be passed to the select methods (which is faster)
 	 *
-	 * @param {array} $params query parameters
+	 * @param array $params query parameters
 	 */
 	public function getSql($params = array())
 	{
@@ -2372,9 +2372,9 @@ class QuerySQL extends Query
 	/**
 	 * Helper function to convert parameters which are arrays into a format suitable to be used in the query
 	 *
-	 * @param {string} $sql
-	 * @param {string} $name Parameter name
-	 * @param {array} $value Parameter value
+	 * @param string $sql
+	 * @param string $name Parameter name
+	 * @param array $value Parameter value
 	 */
 	private function setArrayParam(&$sql, $name, $value)
 	{
@@ -2393,9 +2393,9 @@ class QuerySQL extends Query
 	/**
 	 * Helper function to convert parameters which are arrays of tuples into a format suitable to be used in the query
 	 *
-	 * @param {string} $sql
-	 * @param {string} $name Parameter name
-	 * @param {array} $value Parameter value
+	 * @param string $sql
+	 * @param string $name Parameter name
+	 * @param array $value Parameter value
 	 */
 	private function setTupleParam(&$sql, $name, $value)
 	{
@@ -2433,9 +2433,9 @@ class QuerySQL extends Query
 	/**
 	 * Replace the ":param" string with the value
 	 *
-	 * @param {string} $sql
-	 * @param {string} $name Parameter name
-	 * @param {mixed} $value SQL encoded parameter value or array of SQL encoded parameter values
+	 * @param string $sql
+	 * @param string $name Parameter name
+	 * @param mixed $value SQL encoded parameter value or array of SQL encoded parameter values
 	 */
 	private function setParam(&$sql, $name, $value)
 	{
@@ -2486,9 +2486,9 @@ class QueryTree extends Query
 	/**
 	 * Constructor
 	 *
-	 * @param {DB} $db Handle to database
-	 * @param {string} $id ID of parent query - $id should refer to an atomic query
-	 * @param {string} $terms Query terms corresponding to the child queries of the tree
+	 * @param DB $db Handle to database
+	 * @param string $id ID of parent query - $id should refer to an atomic query
+	 * @param string $terms Query terms corresponding to the child queries of the tree
 	 */
 	public function __construct(&$db, $id, $terms = array())
 	{
@@ -2534,8 +2534,8 @@ class QueryTree extends Query
 	/**
 	 * Adds a parameter binding to the query
 	 *
-	 * @param {string} $paramName
-	 * @param {string} $fieldName 
+	 * @param string $paramName
+	 * @param string $fieldName 
 	 */
 	public function bind($paramName, $fieldName = null)
 	{
@@ -2548,7 +2548,7 @@ class QueryTree extends Query
 	/**
 	 * Executes the query
 	 *
-	 * @param {assoc} $paramValues
+	 * @param assoc $paramValues
 	 */
 	public function execute($paramValues = null)
 	{
@@ -2564,9 +2564,9 @@ class QueryTree extends Query
 	/**
 	 * Connects a query to this query
 	 *
-	 * @param {string} $term
+	 * @param string $term
 	 *
-	 * @return {Query}
+	 * @return Query
 	 */
 	protected function link($term)
 	{
@@ -2635,7 +2635,7 @@ class QueryTree extends Query
 	/**
 	 * Binds the child queries to the query output
 	 *
-	 * @param {array} $rows The rows/row as returned by QuerySQL
+	 * @param array $rows The rows/row as returned by QuerySQL
 	 */
 	private function bindChildren(&$rows)
 	{
@@ -2659,8 +2659,8 @@ class QueryTree extends Query
 	/**
 	 * Executes the child query and ties the result to the output of the parent query
 	 *
-	 * @param {array} $parentRows Query output of the parent query
-	 * @param {object} $child
+	 * @param array $parentRows Query output of the parent query
+	 * @param object $child
 	 */
 	private function bindChild(&$parentRows, &$child)
 	{
@@ -2763,8 +2763,8 @@ class Term
 	 * First tries to parse a structure like "( ... )" or "prefix.( ... )"
 	 * ( the second form is needed for parsing terms like a:(b|c) - a is passed as prefix to (b|c), like a.(b|c) )
 	 *
-	 * @param {DB} $db
-	 * @param {string} $term
+	 * @param DB $db
+	 * @param string $term
 	 */
 	public static function parse(&$db, $term)
 	{
@@ -2795,8 +2795,8 @@ class Term
 	 * Checks if the 'root' element of each terms should be replaced by an alias
 	 * For example "a(b,c)" and alias "a" => "d" will result in "d(b,c)"
 	 *
-	 * @param {array} $terms
-	 * @param {assoc} $aliases
+	 * @param array $terms
+	 * @param assoc $aliases
 	 */
 	public static function convertAliases($terms, $aliases)
 	{
@@ -2820,8 +2820,8 @@ class Term
 	/**
 	 * Parses a merge term, like a|b|c
 	 *
-	 * @param {DB} $db
-	 * @param {string} $term 
+	 * @param DB $db
+	 * @param string $term 
 	 */
 	private static function parseMerge(&$db, $term = null, $prefix = null)
 	{
@@ -2841,8 +2841,8 @@ class Term
 	/**
 	 * Parses a attach term, like a+b+c
 	 *
-	 * @param {DB} $db
-	 * @param {string} $term
+	 * @param DB $db
+	 * @param string $term
 	 */
 	private static function parseAttach(&$db, $term)
 	{
@@ -2858,8 +2858,8 @@ class Term
 	/**
 	 * Parses a filter term, like a:b:c
 	 *
-	 * @param {DB} $db
-	 * @param {string} $term
+	 * @param DB $db
+	 * @param string $term
 	 */
 	private static function parseChain(&$db, $term)
 	{
@@ -2875,8 +2875,8 @@ class Term
 	/**
 	 * Parses a ID tree structure and sets the ID of this query and creates child queries
 	 *
-	 * @param {DB} $db
-	 * @param {string} $term
+	 * @param DB $db
+	 * @param string $term
 	 */
 	private static function parseTree(&$db, $term)
 	{
@@ -2900,7 +2900,7 @@ class Term
 	/**
 	 * Gets the ID part and children-part out of a tree structure, so "a(b(c),d)" will return "a" & "b(c),d"
 	 *
-	 * @param {string} $idTree
+	 * @param string $idTree
 	 */
 	private static function parseID($idTree)
 	{
@@ -2925,8 +2925,8 @@ class Term
 	/**
 	 * Checks which type of query corresponds with $id and returns a new instance of the corresponding query object
 	 *
-	 * @param {DB} $db
-	 * @param {string} $id
+	 * @param DB $db
+	 * @param string $id
 	 */
 	private static function atomic(&$db, $id)
 	{
@@ -2942,9 +2942,9 @@ class Term
 	/**
 	 * Splits the string by the separator, respecting possible nested parenthesis structures
 	 *
-	 * @param {string} $string
-	 * @param {string} $separator1 Must be a single char!
-	 * @param {string} $separator2 (optional) Must be a single char!
+	 * @param string $string
+	 * @param string $separator1 Must be a single char!
+	 * @param string $separator2 (optional) Must be a single char!
 	 */
 	private static function split($string, $separator1, $separator2=null)
 	{
@@ -3009,7 +3009,7 @@ class QuerySet
 	/**
 	 * Constructor
 	 *
-	 * @param {string} $pathQueries
+	 * @param string $pathQueries
 	 */
 	public function __construct($pathQueries)
 	{
@@ -3022,7 +3022,7 @@ class QuerySet
 	/**
 	 * Gets/sets the label for the query set
 	 *
-	 * @param {string} $label
+	 * @param string $label
 	 */
 	public function label($label = -1)
 	{
@@ -3040,8 +3040,8 @@ class QuerySet
 	/**
 	 * Gets/sets a callback function for a query
 	 *
-	 * @param {string} $queryID
-	 * @param {function} $callback
+	 * @param string $queryID
+	 * @param function $callback
 	 */
 	public function callback($queryID, $callback = null)
 	{
@@ -3056,7 +3056,7 @@ class QuerySet
 	/**
 	 * Gets/sets the path to the queries
 	 *
-	 * @param {string} $path
+	 * @param string $path
 	 */
 	public function path($path = null)
 	{
@@ -3071,7 +3071,7 @@ class QuerySet
 	/**
 	 * Loads the content of a file
 	 *
-	 * @param {string} $filename
+	 * @param string $filename
 	 */
 	public static function load($filename, $parseAsJSON = false)
 	{
@@ -3100,7 +3100,7 @@ class QuerySet
 	/**
 	 * Gets all meta data related to the given query
 	 *
-	 * @param {string} $queryID
+	 * @param string $queryID
 	 */
 	public function getInterface($queryID)
 	{
@@ -3120,7 +3120,7 @@ class QuerySet
 	/**
 	 * Gets the JSON file for the given query
 	 *
-	 * @param {string} $queryID
+	 * @param string $queryID
 	 */
 	public function json($queryID)
 	{
@@ -3132,7 +3132,7 @@ class QuerySet
 	/**
 	 * Returns the SQL-code which is associated with the given queryID
 	 *
-	 * @param {string} $queryID ID of the query
+	 * @param string $queryID ID of the query
 	 */
 	public function sql($queryID)
 	{
@@ -3177,7 +3177,7 @@ class Profiler
 	/**
 	 * Constructor
 	 *
-	 * @param {boolean} $run Do profiling or not
+	 * @param boolean $run Do profiling or not
 	 */
 	public function __construct($run = true)
 	{
@@ -3203,7 +3203,7 @@ class Profiler
 	/**
 	 * Create a new node
 	 *
-	 * @param {string} $node
+	 * @param string $node
 	 */
 	public function begin($node)
 	{
@@ -3307,7 +3307,7 @@ class Compiler
 	/**
 	 * Constructor
 	 *
-	 * @param {string} $configFile Optionally you can provide a config file
+	 * @param string $configFile Optionally you can provide a config file
 	 */
 	public function __construct($configFile = null)
 	{
@@ -3330,8 +3330,8 @@ class Compiler
 	/**
 	 * Checks if the TinyQuery code has changed; if so calls the online compiler
 	 *
-	 * @param {boolean} $force (optional) Set this to true to call the compiler anyway
-	 * @param {boolean} $doCleanUp (optional) If set to true, it will delete local sql files which are not in the compiler output
+	 * @param boolean $force (optional) Set this to true to call the compiler anyway
+	 * @param boolean $doCleanUp (optional) If set to true, it will delete local sql files which are not in the compiler output
 	 */
 	public function compile($force = false, $doCleanUp = false)
 	{
@@ -3665,7 +3665,7 @@ class Compiler
 	/**
 	 * Writes a message to the logfile (if present)
 	 *
-	 * @param {string} $message
+	 * @param string $message
 	 */
 	private function log($message)
 	{
@@ -3680,8 +3680,8 @@ class Compiler
 	/**
 	 * Writes the source file
 	 *
-	 * @param {string} $fileID 
-	 * @param {string} $code
+	 * @param string $fileID 
+	 * @param string $code
 	 */
 	private function writeSource($fileID, $code)
 	{
@@ -3693,8 +3693,8 @@ class Compiler
 	/**
 	 * Writes the interface file
 	 *
-	 * @param {string} $fileID 
-	 * @param {string} $interface
+	 * @param string $fileID 
+	 * @param string $interface
 	 */
 	private function writeInterface($fileID, $interface)
 	{
@@ -3706,8 +3706,8 @@ class Compiler
 	/**
 	 * Creates a .sql file containing the query. The name of the file will be [$queryID].sql
 	 *
-	 * @param {string} $fileID 
-	 * @param {string} $sqlCode
+	 * @param string $fileID 
+	 * @param string $sqlCode
 	 */
 	private function writeSQLfile($fileID, $sqlCode)
 	{
@@ -3719,8 +3719,8 @@ class Compiler
 	/**
 	 * Writes $content to $filename
 	 *
-	 * @param {string} $filename
-	 * @param {string} $content
+	 * @param string $filename
+	 * @param string $content
 	 */
 	private function writeFile($filename, $content)
 	{
@@ -3774,10 +3774,10 @@ class DB
 	 * The connection should be explicitly set up by calling the connect-method after the DB-object is constructed.
 	 * If you specify a $pdoHandle, this method should not be called.
 	 *
-	 * @param {PDO} $pdoHandle (optional) Use this if you already have a PDO database connection.
-	 * @param {string} $configFile (optional) Use this to specify your custom XML-configfile
-	 * @param {Profiler|boolean} $profiler (optional) If 'true' then a Profiler object is created and run is called; if 'false' the object is also created but not initialized
-	 * @param {boolean} $neverAutoCompile (optional) This can be used to overrule the setting in the config file 
+	 * @param PDO $pdoHandle (optional) Use this if you already have a PDO database connection.
+	 * @param string $configFile (optional) Use this to specify your custom XML-configfile
+	 * @param Profiler|boolean $profiler (optional) If 'true' then a Profiler object is created and run is called; if 'false' the object is also created but not initialized
+	 * @param boolean $neverAutoCompile (optional) This can be used to overrule the setting in the config file 
 	 */
 	public function __construct( $pdoHandle = null, $configFile = null, $profiler = null, $neverAutoCompile = false )
 	{
@@ -3817,8 +3817,8 @@ class DB
 	/**
 	 * Get/set method for global query parameters. If value is not specified, the value of the global is returned
 	 *
-	 * @param {string} $name
-	 * @param {mixed} $value
+	 * @param string $name
+	 * @param mixed $value
 	 */
 	public function param($name, $value = -99999999)
 	{
@@ -3886,7 +3886,7 @@ class DB
 	}
 	
 	/**
-	 * @return {PDO} The PDO DB handle
+	 * @return PDO The PDO DB handle
 	 */
 	public function pdo()
 	{
@@ -3896,7 +3896,7 @@ class DB
 	/**
 	 * Creates and returns a new Query object 
 	 *
-	 * @param {string} $term A query term like "a" or "a:b+c(d|e)"
+	 * @param string $term A query term like "a" or "a:b+c(d|e)"
 	 */
 	public function query($term)
 	{
@@ -3906,8 +3906,8 @@ class DB
 	/**
 	 * Creates a query based on $term, executes it and returns the query output
 	 *
-	 * @param {string} $term
-	 * @param {mixed} $paramValues
+	 * @param string $term
+	 * @param mixed $paramValues
 	 */
 	public function get($term, $paramValues = null)
 	{
@@ -3917,8 +3917,8 @@ class DB
 	/**
 	 * Creates a query based on $term, executes it and returns the first row of the query output
 	 *
-	 * @param {string} $term
-	 * @param {mixed} $paramValues
+	 * @param string $term
+	 * @param mixed $paramValues
 	 */
 	public function get1($term, $paramValues = null)
 	{
@@ -3928,8 +3928,8 @@ class DB
 	/**
 	 * Creates a basic select query for the given table and IDfields
 	 *
-	 * @param {string} $table
-	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 * @param string $table
+	 * @param int|array $IDfields If an integer is supplied, it is assumed to be the primary key. 
 	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
 	 */
 	private function createSelect($table, $IDfields)
@@ -3944,8 +3944,8 @@ class DB
 	/**
 	 * Selects a single record from the given table
 	 *
-	 * @param {string} $table
-	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 * @param string $table
+	 * @param int|array $IDfields If an integer is supplied, it is assumed to be the primary key. 
 	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
 	 */
 	public function getRecord($table, $IDfields)
@@ -3956,8 +3956,8 @@ class DB
 	/**
 	 * Selects records from the given table
 	 *
-	 * @param {string} $table
-	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 * @param string $table
+	 * @param int|array $IDfields If an integer is supplied, it is assumed to be the primary key. 
 	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
 	 */
 	public function getRecordSet($table, $IDfields)
@@ -3968,9 +3968,9 @@ class DB
 	/**
 	 * Selects a single record from the given table
 	 *
-	 * @param {string} $field Fieldname which is used for selection
-	 * @param {string} $table
-	 * @param {int|string} $value Fieldvalue
+	 * @param string $field Fieldname which is used for selection
+	 * @param string $table
+	 * @param int|string $value Fieldvalue
 	 */
 	public function getRecordBy($field, $table, $value)
 	{
@@ -3980,9 +3980,9 @@ class DB
 	/**
 	 * Selects records from the given table
 	 *
-	 * @param {string} $field Fieldname which is used for selection
-	 * @param {string} $table
-	 * @param {int|string} $value Fieldvalue
+	 * @param string $field Fieldname which is used for selection
+	 * @param string $table
+	 * @param int|string $value Fieldvalue
 	 */
 	public function getRecordSetBy($field, $table, $value)
 	{
@@ -3992,9 +3992,9 @@ class DB
 	/**
 	 * Inserts a record in the given table
 	 *
-	 * @param {string} $table
-	 * @param {assoc} $record
-	 * @param {boolean} $updateOnDuplicateKey If the insert fails due to a duplicate key error, then try to do an update (MySQL only)
+	 * @param string $table
+	 * @param assoc $record
+	 * @param boolean $updateOnDuplicateKey If the insert fails due to a duplicate key error, then try to do an update (MySQL only)
 	 */
 	public function insert($table, $record, $updateOnDuplicateKey = false)
 	{
@@ -4046,8 +4046,8 @@ class DB
 	 * Saves (either inserts or updates) a record in the given table (MySQL only)
 	 * NOTE: for this function to work correctly, the field(s) which correspond to a unique DB-key should be present in $record
 	 *
-	 * @param {string} $table
-	 * @param {assoc} $record
+	 * @param string $table
+	 * @param assoc $record
 	 */
 	public function save($table, $record)
 	{
@@ -4057,10 +4057,10 @@ class DB
 	/**
 	 * Updates a record in the given table
 	 *
-	 * @param {string} $table
-	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 * @param string $table
+	 * @param int|array $IDfields If an integer is supplied, it is assumed to be the primary key. 
 	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
-	 * @param {assoc} $record
+	 * @param assoc $record
 	 */
 	public function update($table, $IDfields, $record)
 	{
@@ -4081,8 +4081,8 @@ class DB
 	/**
 	 * Deletes a record from the given table
 	 *
-	 * @param {string} $table
-	 * @param {int|array} $IDfields If an integer is supplied, it is assumed to be the primary key. 
+	 * @param string $table
+	 * @param int|array $IDfields If an integer is supplied, it is assumed to be the primary key. 
 	 *                            If it is an array, it is assumed to be an assoc array of fields which should all be matched
 	 */
 	public function delete($table, $IDfields)
@@ -4098,11 +4098,15 @@ class DB
 	
 	/**
 	 * Executes the given query
+	 * 
+	 * Note that when using $checkForMultipleStatements, this will only work for non-select queries
+	 * because the statement cursor is moved forward and cannot be rewinded 
 	 *
-	 * @param {string} $query SQL query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL query
+	 * @param assoc $params Query parameters
+	 * @param bool $checkForMultipleStatements Checks if there is an error in multi statement queries
 	 */
-	public function execute($query, $params = array())
+	public function execute($query, $params = array(), $checkForMultipleStatements = false)
 	{
 		if (!$this->dbh) 
 			throw new \Exception("DB::execute called but there is no connection to the DB - call connect first");
@@ -4131,6 +4135,13 @@ class DB
 
 		$this->profiler->end();
 		
+		if ($checkForMultipleStatements)
+		{
+			// Just by moving through the rowsets, possible exceptions are thrown per set
+			do {
+			} while ($sth->nextRowset());
+		}
+		
 		if (!$r) 
 		{
 			$error = $sth->errorInfo();
@@ -4145,9 +4156,9 @@ class DB
 	/**
 	 * Escapes a string such that it can be used in a query
 	 *
-	 * @param {string} $string
-	 * @param {boolean} $addquotes (optional)
-	 * @param {boolean} $useNULLforEmptyValue (optional)
+	 * @param string $string
+	 * @param boolean $addquotes (optional)
+	 * @param boolean $useNULLforEmptyValue (optional)
 	 */
 	public function toSQL($string, $addquotes = false, $useNULLforEmptyValue = false)
 	{
@@ -4183,7 +4194,7 @@ class DB
 	/**
 	 * Same as toSQL, except that integers & tuples like (1,2,3) are not quoted
 	 *
-	 * @param {string} $string
+	 * @param string $string
 	 */
 	public function encode($string)
 	{
@@ -4196,8 +4207,8 @@ class DB
 	/**
 	 * Executes query and returns numeric array of numeric arrays
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectAll($query, $params = array())
 	{
@@ -4207,8 +4218,8 @@ class DB
 	/**
 	 * Executes query and returns numeric array of associative arrays
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectAllAssoc($query, $params = array())
 	{
@@ -4218,8 +4229,8 @@ class DB
 	/**
 	 * Executes query and returns first record as numeric array
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectRow($query, $params = array())
 	{
@@ -4229,8 +4240,8 @@ class DB
 	/**
 	 * Executes query and returns first record as associative array
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectAssoc($query, $params = array())
 	{
@@ -4240,8 +4251,8 @@ class DB
 	/**
 	 * Executes query and returns first field of first record
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectFirst($query, $params = array()) 
 	{
@@ -4253,8 +4264,8 @@ class DB
 	/**
 	 * Executes query and returns numeric array containing first field of each row
 	 *
-	 * @param {string} $query SQL-query
-	 * @param {assoc} $params Query parameters
+	 * @param string $query SQL-query
+	 * @param assoc $params Query parameters
 	 */
 	public function selectAllFirst($query, $params = array()) 
 	{
@@ -4269,9 +4280,9 @@ class DB
 	/**
 	 * Create a concatenation of `fieldname` = "value" strings
 	 *
-	 * @param {assoc} $fields
-	 * @param {string} $glue
-	 * @param {boolean} $isOnNull If true, it uses 'is' for NULL values
+	 * @param assoc $fields
+	 * @param string $glue
+	 * @param boolean $isOnNull If true, it uses 'is' for NULL values
 	 */
 	private function fieldList($fields, $glue, $isOnNull = false)
 	{
@@ -4300,34 +4311,36 @@ class DB
 /**
  * Api
  *
- * This is a simple JSON API which can be used on top of DB
+ * This class can be used to setup a JSON REST API which can be used on connect to the query set
  *
- * @author 	Wouter Diesveld <wouter@tinyqueries.com>
+ * @author Wouter Diesveld <wouter@tinyqueries.com>
  * @package TinyQueries
  */
 class Api extends HttpTools
 {
-	protected $server;
-	protected $query;
-	protected $debugMode;
-	protected $configFile;
-	protected $addProfilingInfo;
-	protected $doTransaction;
-	protected $request;
-	protected $outputFormat;
-	protected $reservedParams;
-	protected $params = array();
-	protected $endpoints = array();
-	
 	public $db;
 	public $profiler;
+	
+	protected $addProfilingInfo;
+	protected $config;
+	protected $configFile;
+	protected $debugMode;
+	protected $doTransaction;
+	protected $endpoints = array();
+	protected $handler;
+	protected $outputFormat;
+	protected $params = array();
+	protected $query;
+	protected $request;
+	protected $reservedParams;
+	protected $server;
 	
 	/**
 	 * Constructor
 	 *
-	 * @param {string} $configFile (optional) Path to DB settings file
-	 * @param {boolean} $debugMode (optional) Sets debug mode
-	 * @param {boolean} $addProfilingInfo (optional) Adds profiling info to api response
+	 * @param string $configFile (optional) Path to DB settings file
+	 * @param boolean $debugMode (optional) Sets debug mode
+	 * @param boolean $addProfilingInfo (optional) Adds profiling info to api response
 	 */
 	public function __construct($configFile = null, $debugMode = false, $addProfilingInfo = false)
 	{
@@ -4339,7 +4352,7 @@ class Api extends HttpTools
 		$this->contentType		= null;
 		$this->reservedParams 	= array('query', 'param'); // + all params starting with _ are also ignored as query parameter
 		
-		// request contains the details of the request
+		// Request contains the details of the request
 		$this->request = array(
 			'method' => self::getServerVar('REQUEST_METHOD', '/^\w+$/', 'GET')
 		);
@@ -4353,29 +4366,36 @@ class Api extends HttpTools
 	}
 	
 	/**
-	 * Initializes the api (connects to db)
+	 * Initializes the api
 	 *
+	 * @return Api $this
 	 */
 	public function init()
 	{
+		// If there is a db object init has already been done
 		if ($this->db)
 			return;
 		
+		// Create database object
 		$this->db = new DB( null, $this->configFile, $this->profiler );
 		
+		// Connect to db
 		$this->db->connect();
 		
-		// Check for Swagger specs
-		$config = new Config( $this->configFile );
+		// Read config
+		$this->config = new Config( $this->configFile );
 		
-		if ($config->api->swagger)
-			$this->importSwagger(  $config->api->swagger );
+		// Check for Swagger specs
+		if ($this->config->api->swagger)
+			$this->importSwagger(  $this->config->api->swagger );
+		
+		return $this;
 	}
 	
 	/**
 	 * Processes the request and sends the response to the stdout
 	 *
-	 * @param {string} $contentType (optional)
+	 * @param string $contentType (optional)
 	 */
 	public function sendResponse($contentType = 'application/json')
 	{
@@ -4432,7 +4452,7 @@ class Api extends HttpTools
 		}
 		catch (\Exception $e)
 		{
-			// reset output buffer
+			// Reset output buffer
 			ob_clean();
 			
 			if ($this->doTransaction)
@@ -4451,14 +4471,14 @@ class Api extends HttpTools
 			$response = $this->createErrorResponse( $errorMessage, $showToUser, $httpCode );
 		}
 		
-		// add general info to response
+		// Add general info to response
 		if ($this->addProfilingInfo)
 		{
 			$response['timestamp'] 	= time();
 			$response['server'] 	= $this->server;
 		}
 		
-		// optional parameters for redirect (non ajax only)
+		// Optional parameters for redirect (non ajax only)
 		$urlSuccess	= self::getRequestVar('url-success');
 		$urlError 	= self::getRequestVar('url-error');
 		
@@ -4482,6 +4502,7 @@ class Api extends HttpTools
 	/**
 	 * Do contentType specific encoding and output to stdout
 	 *
+	 * @param mixed $response
 	 */
 	protected function sendResponseBody(&$response)
 	{
@@ -4505,6 +4526,7 @@ class Api extends HttpTools
 	
 	/**
 	 * Overload this function if you have more things to clean up when an error occors during the request-processing
+	 *
 	 */
 	protected function rollback()
 	{
@@ -4523,7 +4545,7 @@ class Api extends HttpTools
 	/**
 	 * Overload this function if you want some post processing of the response before it is sent to the client
 	 *
-	 * @param {mixed} $response
+	 * @param mixed $response
 	 */
 	protected function postProcessResponse( &$response )
 	{
@@ -4531,6 +4553,9 @@ class Api extends HttpTools
 	
 	/**
 	 * Returns a filename based on a queryID (term)
+	 *
+	 * @param string $queryTerm
+	 * @return string
 	 */
 	protected function createFilename( $queryTerm )
 	{
@@ -4542,21 +4567,67 @@ class Api extends HttpTools
 	}
 	
 	/**
-	 * Gets / sets the endpoints
+	 * Sets the endpoints
 	 *
-	 * @param {array} $endpoints If null, returns the endpoints, otherwise sets the entpoints. 
-	 *                           Array should be assoc array like 'GET /my/path/{id}' => 'myQuery'
-	 *                           Parameters which are in the path or in the body will be passed to the query
+	 * @example 
+	 *   $api->endpoints([
+	 *      'GET /my/path/{id}' => 'myQuery1',
+	 *      'PUT /my/path/{id}' => 'myQuery2'
+	 *   ]);
+	 *
+	 * @example
+	 *   $api->handler( $myCustomHandler )->endpoints([
+	 *      'GET /my/path/{id}' => [ 'query' => 'myQuery1' ],
+	 *      'PUT /my/path/{id}' => [ 'method' => 'myCustomMethod' ]
+	 *   ]);
+	 *
+	 * All parameters which are in the URL path or in the body will be passed to the endpoint handler.
+	 * If you want to use a custom handler you should set your handler using the 'handler' method
+	 *
+	 * @param array $endpoints 
+	 * @return Api $this
 	 */
-	public function endpoints( $endpoints = null )
+	public function endpoints( $endpoints )
 	{
 		if (is_null($endpoints))
 			return $this->endpoints;
 		
-		foreach ($endpoints as $path => $query)
-			$this->endpoints[ $path ] = array(
-				'query' => $query
-			);
+		foreach ($endpoints as $path => $handler)
+		{
+			if (is_array($handler)) 
+			{
+				if (!array_key_exists('query', $handler) && !array_key_exists('method', $handler))
+					throw new \Exception("Endpoint handler for '$path' should at least have the field 'query' or 'method'");
+				
+				if (array_key_exists('method', $handler) && !$this->handler)
+					throw new \Exception("If you use 'method' to define an endpoint, you should set your custom handler using the method 'handler'");
+					
+				$this->endpoints[ $path ] = $handler;
+			}
+			elseif (is_string($handler))
+				$this->endpoints[ $path ] = array(
+					'query' => $handler
+				);
+			else 
+				throw new \Exception("Invalid format endpoint handler for '$path'");
+		}
+			
+		return $this;
+	}
+	
+	/**
+	 * Sets a custom handler
+	 * 
+	 * For an example check the docs of 'endpoints'
+	 *
+	 * @param object $handler This should be an initialized object containing your own custom methods. 
+	 * @return Api $this
+	 */
+	public function handler( $handler )
+	{
+		$this->handler = $handler;
+		
+		return $this;
 	}
 	
 	/**
@@ -4569,7 +4640,8 @@ class Api extends HttpTools
 	 *
 	 * This will set $this->params['userID'] to the value in the URL if there is a match
 	 *
-	 * @param {string} $endpoint
+	 * @param string $endpoint
+	 * @param boolean
 	 */
 	public function endpoint($endpoint)
 	{
@@ -4621,8 +4693,9 @@ class Api extends HttpTools
 	/**
 	 * Converts a URI-path to a term + paramvalue + [output should be single row] true/false
 	 *
-	 * @param {$string} $path The resource path
-	 * @param {string} $method The HTTP method
+	 * @param string $path The resource path
+	 * @param string $method The HTTP method
+	 * @return array
 	 */
 	private function pathToTerm($path, $method)
 	{
@@ -4672,12 +4745,13 @@ class Api extends HttpTools
 	/**
 	 * Returns the request parameter values
 	 *
+	 * @return array
 	 */
 	private function getQueryParams()
 	{
 		$params = array();
 		
-		// read the query-parameters
+		// Read the query-parameters
 		foreach (array_keys($_REQUEST) as $paramname)
 			if (!in_array($paramname, $this->reservedParams) && substr($paramname, 0, 1) != '_')
 			{
@@ -4713,6 +4787,7 @@ class Api extends HttpTools
 	/**
 	 * Returns the requested query term + its parameter values
 	 *
+	 * @return array
 	 */
 	protected function requestedQuery()
 	{
@@ -4741,6 +4816,7 @@ class Api extends HttpTools
 	/**
 	 * Imports endpoints from swagger definition file
 	 *
+	 * @param string $swaggerFile
 	 */
 	protected function importSwagger( $swaggerFile )
 	{
@@ -4757,21 +4833,22 @@ class Api extends HttpTools
 		foreach ($specs['paths'] as $path => $methods)
 			foreach ($methods as $method => $def)
 			{
-				$spec = array();
+				$handler = array();
 				
 				if (array_key_exists('x-tq-query', $def))
-					$spec['query'] = $def['x-tq-query'];
+					$handler['query'] = $def['x-tq-query'];
 				
-				if (array_key_exists('x-tq-handler', $def))
-					$spec['handler'] = $def['x-tq-handler'];
+				if (array_key_exists('x-tq-method', $def))
+					$handler['method'] = $def['x-tq-method'];
 				
-				$this->endpoints[ strtoupper($method) . ' ' . $path ] = $spec;
+				$this->endpoints[ strtoupper($method) . ' ' . $path ] = $handler;
 			}
 	}
 	
 	/**
 	 * Checks if the endpoint which is called is in the list of endpoints and executes the corresponding query
 	 *
+	 * @return mixed The response of the endpoint
 	 */
 	protected function processEndpoint()
 	{
@@ -4780,9 +4857,15 @@ class Api extends HttpTools
 			$this->params = $posted;	
 	
 		// Check which of the endpoints is called and if there is a query defined for it
-		foreach ($this->endpoints as $path => $def)
-			if ($this->endpoint( $path ) && array_key_exists('query', $def))
-				return $this->db->query( $def['query'] )->run( $this->params );
+		foreach ($this->endpoints as $path => $handler)
+			if ($this->endpoint( $path ))
+			{
+				if (array_key_exists('query', $handler))
+					return $this->db->query( $handler['query'] )->run( $this->params );
+				
+				if (array_key_exists('method', $handler))
+					return $this->invokeCustomMethod( $handler['method'] );
+			}
 		
 		// Catch the root if none was defined and return basic api info
 		if ($this->endpoint('GET /'))
@@ -4790,7 +4873,7 @@ class Api extends HttpTools
 			$endpointList = array_keys( $this->endpoints );
 			sort( $endpointList );
 			return array(
-				'message' => 'Welcome to the API',
+				'message' => 'Welcome to the API for ' . $this->config->project->label,
 				'endpoints' => $endpointList
 			);
 		}
@@ -4799,8 +4882,46 @@ class Api extends HttpTools
 	}
 	
 	/**
+	 * Calls the method from the custom handler
+	 *
+	 * @param string $methodName 
+	 * @return mixed The response of the method
+	 */
+	private function invokeCustomMethod($methodName)
+	{
+		if (!$this->handler)
+			throw new \Exception("Cannot invoke custom method '$methodName' - no handler defined");
+		
+		$method = new \ReflectionMethod( $this->handler, $methodName );
+		$params = $method->getParameters();
+		$args	= array();
+		
+		// Loop through method parameters and get each param value from the params in the request
+		foreach ($params as $param)
+		{
+			$name = $param->getName();
+			
+			// Get parameter value from request if present
+			if (array_key_exists($name, $this->params))
+				$val = $this->params[ $name ];
+			// Otherwise use default value if present
+			elseif ($param->isOptional())
+				$val = $param->getDefaultValue();
+			// Otherwise throw error
+			else
+				throw new \Exception("Parameter '$name' is required");
+
+			$args[] = $val;
+		}
+
+		// Call method
+		return $method->invokeArgs( $this->handler, $args );		
+	}
+	
+	/**
 	 * Processes the api request, e.g. executes the query/queries and returns the output
 	 *
+	 * @return mixed The response of the request
 	 */
 	protected function processRequest()
 	{
@@ -4864,15 +4985,20 @@ class Api extends HttpTools
 	}
 	
 	/**
-	 * Creates an error response in JSON
+	 * Creates an error response
 	 *
+	 * @param string $errorMessage
+	 * @param boolean $showToUser
+	 * @param int $httpCode
+	 * @param string $altoMessage
+	 * @return array
 	 */
-	protected function createErrorResponse($errorMessage, $showToUser, $httpCode = 400, $altoMessage = "Cannot process request" )
+	protected function createErrorResponse($errorMessage, $showToUser, $httpCode = 400, $altoMessage = 'Cannot process request' )
 	{
-		$this->setHttpResponseCode($httpCode);
+		$this->setHttpResponseCode( $httpCode );
 		
 		return array(
-			"error"	=> ($showToUser) 
+			'error'	=> ($showToUser) 
 				? $errorMessage 
 				: $altoMessage
 		);
@@ -4881,7 +5007,7 @@ class Api extends HttpTools
 	/**
 	 * CSV encoder function; outputs to stdout
 	 *
-	 * @param {assoc|array} $response
+	 * @param assoc|array $response
 	 */
 	public function csvEncode($response)
 	{
@@ -4937,7 +5063,8 @@ class Api extends HttpTools
 	/**
 	 * JSON encoder function (Also does the UTF8 encoding)
 	 *
-	 * @param {object} $object
+	 * @param object $object
+	 * @return string
 	 */
 	public static function jsonEncode($object)
 	{
@@ -4955,7 +5082,8 @@ class Api extends HttpTools
 	/**
 	 * Converts a string to UTF8, if it is not yet in UTF8
 	 *
-	 * @param {mixed} $item If item is not a string, it is untouched
+	 * @param mixed $item If item is not a string, it is untouched
+	 * @rerturn mixed
 	 */
 	public static function toUTF8(&$item) 
 	{ 
@@ -4972,6 +5100,7 @@ class Api extends HttpTools
 	 * This method can be overloaded to add your own permission checks
 	 * The overloaded method can use $this->request to check the specs of the request
 	 *
+	 * @return boolean
 	 */
 	protected function checkRequestPermissions()
 	{
