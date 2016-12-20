@@ -5,7 +5,7 @@
  * @author      Wouter Diesveld <wouter@tinyqueries.com>
  * @copyright   2012 - 2016 Diesveld Query Technology
  * @link        http://www.tinyqueries.com
- * @version     3.2.2
+ * @version     3.2.3
  * @package     TinyQueries
  *
  * License
@@ -288,7 +288,7 @@ class Config
 {
 	const DEFAULT_CONFIGFILE 	= '../config/config.xml';
 	const DEFAULT_COMPILER 		= 'https://compiler1.tinyqueries.com';
-	const VERSION_LIBS			= '3.2.2';
+	const VERSION_LIBS			= '3.2.3';
 
 	public $compiler;
 	public $database;
@@ -334,9 +334,11 @@ class Config
 	}
 	
 	/**
-	 * Returns the absolute path 
+	
+	 * Returns the absolute path of a folder 
 	 *
 	 * @param string $path
+	 * @return string
 	 */
 	public static function pathAbs($path)
 	{
@@ -349,6 +351,35 @@ class Config
 			throw new \Exception("Cannot find path '" . $path . "'");
 			
 		return $pathAbs;
+	}
+
+	/**
+	 * Returns the absolute path of a file 
+	 *
+	 * @param string $pathToFile
+	 * @param string $defaultFilename Can be used in case only a folder is specified
+	 * @return string
+	 */
+	private static function pathAbsFile($pathToFile, $defaultFilename = null)
+	{
+		if (!(string) $pathToFile)
+			return null;
+
+		$path = pathinfo( (string) $pathToFile );
+		
+		if (!$path || !array_key_exists('dirname', $path))
+			throw new \Exception("Config: Path of $pathToFile does not exist");
+		
+		$dir = realpath( $path['dirname'] );
+		
+		if (!$dir)
+			throw new \Exception("Config: Path of $pathToFile does not exist");
+		
+		$filename = (array_key_exists('filename', $path))
+			? $path['filename'] . '.' . $path['extension']
+			: $defaultFilename;
+
+		return $dir . "/" . $filename;
 	}
 	
 	/**
@@ -381,7 +412,7 @@ class Config
 		
 		// Import api fields
 		$this->api = new \StdClass();
-		$this->api->swagger			= ($config->api && $config->api['swagger']) ? self::pathAbs( (string) $config->api['swagger'] ) : null;
+		$this->api->swagger			= ($config->api) ? self::pathAbsFile( $config->api['swagger'], 'swagger.json' ) : null;
 		
 		// Import database fields
 		$this->database = new \StdClass();
@@ -400,7 +431,7 @@ class Config
 		$this->compiler->output		= self::pathAbs( (string) $config->compiler['output'] );
 		$this->compiler->server		= ((string) $config->compiler['server']) 	? (string) $config->compiler['server'] : self::DEFAULT_COMPILER;
 		$this->compiler->version	= ((string) $config->compiler['version']) 	? (string) $config->compiler['version'] : null;
-		$this->compiler->logfile	= null;
+		$this->compiler->logfile	= self::pathAbsFile($config->compiler['logfile'], 'compiler.log');
 		$this->compiler->enable 	= ($config->compiler['enable'] && strtolower( (string) $config->compiler['enable'] ) == 'true') ? true : false;
 		$this->compiler->autocompile = ($config->compiler['autocompile'] && strtolower( (string) $config->compiler['autocompile'] ) == 'true') ? true : false;
 		
@@ -408,26 +439,6 @@ class Config
 		if ($this->compiler->version && !preg_match("/^v/", $this->compiler->version))
 			$this->compiler->version = "v" . $this->compiler->version;
 		
-		// Logfile needs special treatment 
-		if ((string) $config->compiler['logfile']) 
-		{
-			$path = pathinfo( (string) $config->compiler['logfile'] );
-			
-			if (!$path || !array_key_exists('dirname', $path))
-				throw new \Exception("Configfile " . $this->configFile . ": Path of logfile does not exist");
-			
-			$dir = realpath( $path['dirname'] );
-			
-			if (!$dir)
-				throw new \Exception("Configfile " . $this->configFile . ": Path of logfile does not exist");
-			
-			$filename = (array_key_exists('filename', $path))
-							? $path['filename'] . "." . $path['extension']
-							: 'compiler.log';
-
-			$this->compiler->logfile = $dir . "/" . $filename;
-		}
-
 		// Import postprocessor fields
 		$this->postprocessor = new \StdClass();
 		$this->postprocessor->nest_fields = 
@@ -3303,6 +3314,7 @@ class Compiler
 	private $verbose;
 	private $filesWritten;
 	private $projectLabel;
+	private $swaggerFile;
 	
 	/**
 	 * Constructor
@@ -3322,6 +3334,7 @@ class Compiler
 		$this->server		= $config->compiler->server;
 		$this->version		= $config->compiler->version;
 		$this->logfile		= $config->compiler->logfile;
+		$this->swaggerFile 	= $config->api->swagger;
 		$this->querySet 	= new QuerySet( $this->folderOutput );
 		$this->verbose		= true;
 		$this->filesWritten	= array();
@@ -3595,8 +3608,8 @@ class Compiler
 		{
 			$error = @simplexml_load_string( $response[1] ); 
 			$errorMessage = ($error)
-								? $error->message
-								: 'Received status '.$status." - ". $response[1];
+				? $error->message
+				: 'Received status '.$status." - ". $response[1];
 								
 			throw new \Exception( $errorMessage );
 		}
@@ -3643,6 +3656,10 @@ class Compiler
 			
 			$cleanUpTypes[] = self::SOURCE_FILES;
 		}
+
+		// Write swagger file if present
+		if ($code->swagger && $this->swaggerFile)
+			$this->writeFile( $this->swaggerFile, $code->swagger );
 			
 		// Clean up files which were not in the compiler output
 		if ($doCleanUp)
@@ -4832,17 +4849,10 @@ class Api extends HttpTools
 			
 		foreach ($specs['paths'] as $path => $methods)
 			foreach ($methods as $method => $def)
-			{
-				$handler = array();
-				
 				if (array_key_exists('x-tq-query', $def))
-					$handler['query'] = $def['x-tq-query'];
-				
-				if (array_key_exists('x-tq-method', $def))
-					$handler['method'] = $def['x-tq-method'];
-				
-				$this->endpoints[ strtoupper($method) . ' ' . $path ] = $handler;
-			}
+					$this->endpoints[ strtoupper($method) . ' ' . $path ] = array(
+						'query' => $def['x-tq-query']
+					);
 	}
 	
 	/**
